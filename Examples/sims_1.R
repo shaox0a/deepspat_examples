@@ -7,7 +7,7 @@ library(dplyr)
 library(fields)
 library(ggplot2)
 library(devtools)
-load_all(deepspat)
+library(deepspat)
 library(cocons)
 #data('holes')
 
