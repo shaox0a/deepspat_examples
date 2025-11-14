@@ -2,16 +2,16 @@ rm(list = ls())
 
 setwd(this.path::here())
 
-library("reticulate")
+library(reticulate)
 library(tensorflow)
 library(tfprobability)
 library(keras)
 library(dplyr)
 library(fields)
 library(ggplot2)
-library("GpGp")
-library("devtools")
-library("deepspat")
+library(GpGp)
+library(devtools)
+library(deepspat)
 
 ######
 # RMSPE
@@ -612,3 +612,4 @@ ggsave(paste0(pic_path, "nepal_corr", ".pdf"),
 # ggsave(paste0(pic_path, "nepal_temp_", ref.point, ".pdf"),
 
 #        plot = plot_temp1, width = width1+width1/3, height = height1, units = "cm")
+
