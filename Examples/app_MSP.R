@@ -3,14 +3,13 @@ rm(list = ls())
 setwd(this.path::here())
 
 
-# library("deepspat")
+library(deepspat)
 library(tensorflow)
 library(keras)
 library(tfprobability)
 library(dplyr)
 library(fields)
 library(maps)
-library("deepspat")
 
 source("utils_ext.R")
 
@@ -686,6 +685,7 @@ p.ext = grid.arrange(p.emp10+theme(legend.position = "none"),
                      heights = unit.c(unit.h1, unit.h1, unit.h1))
 ggsave(paste0(pic_path, "nepal_ext.pdf"),
        plot = p.ext, width = width1+width1+width1/3, height = 3*height1, units = "cm")
+
 
 
 
