@@ -82,8 +82,8 @@ d_gp <- deepspat_GP(f = z ~ x + y - 1,
 )
 
 
-pred_gp <- predict.deepspat_GP(d_gp, deepspat_data_test)
-predall_gp <- predict.deepspat_GP(d_gp, deepspat_data_all)
+pred_gp <- predict(d_gp, deepspat_data_test)
+predall_gp <- predict(d_gp, deepspat_data_all)
 
 rmspe_gp <- RMSPE(deepspat_data_test$z, pred_gp$df_pred$pred_mean)
 crps_gp <- CRPS(deepspat_data_test$z, pred_gp$df_pred$pred_mean, pred_gp$df_pred$pred_var +
@@ -96,6 +96,11 @@ locs <- as.matrix(deepspat_data_train)[, c("x", "y")]
 # Order by max-min ordering
 order_id <- order_maxmin(locs)
 nn_id <- find_ordered_nn(order_id, m = 50) # increase number of neighbors from 50
+m <- ncol(nn_id) - 1
+n <- nrow(nn_id)
+for (i in 1:m){
+  nn_id[i, (i+1):(m+1)] <- (n+1):(n+1+m-i)
+}
 
 d_nngp <- deepspat_nn_GP(f = z ~ x + y - 1,
                          data = deepspat_data_train,
@@ -114,12 +119,12 @@ d_nngp <- deepspat_nn_GP(f = z ~ x + y - 1,
 nn_id_pred <- FNN::get.knnx(data = locs,
                             query = as.matrix(deepspat_data_test[,c("x", "y")]),
                             k = 50)$nn.index
-pred_nngp <- predict.deepspat_nn_GP(d_nngp, deepspat_data_test, nn_id_pred)
+pred_nngp <- predict(d_nngp, deepspat_data_test, nn_id_pred)
 
 nn_id_pred <- FNN::get.knnx(data = locs,
                             query = as.matrix(deepspat_data_all[,c("x", "y")]),
                             k = 50)$nn.index
-predall_nngp <- predict.deepspat_nn_GP(d_nngp, deepspat_data_all, nn_id_pred)
+predall_nngp <- predict(d_nngp, deepspat_data_all, nn_id_pred)
 
 
 rmspe_nngp <- RMSPE(deepspat_data_test$z, pred_nngp$df_pred$pred_mean)
@@ -134,8 +139,8 @@ d_frk <- deepspat(f = z ~ x + y - 1, data = deepspat_data_train, layers = layers
                   method = "ML", nsteps = 50L,
                   learn_rates = init_learn_rates(eta_mean = 0.02)) 
 
-pred_frk <- predict.deepspat(d_frk, deepspat_data_test)
-predall_frk <- predict.deepspat(d_frk, deepspat_data_all)
+pred_frk <- predict(d_frk, deepspat_data_test)
+predall_frk <- predict(d_frk, deepspat_data_all)
 
 rmspe_frk <- RMSPE(deepspat_data_test$z, pred_frk$df_pred$pred_mean)
 crps_frk <- CRPS(deepspat_data_test$z, pred_frk$df_pred$pred_mean, pred_frk$df_pred$pred_var +
