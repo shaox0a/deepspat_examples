@@ -106,7 +106,7 @@ d1 <- deepspat_MSP(f = as.formula(paste(paste(paste0("z", 1:(ncol(obs_all)-2)), 
 # plot(swarped)
 # 
 # cat(round(pred$fitted.kappa, 3), ",", round(pred$fitted.phi, 3))
-# sqrt(diag(pred$Sigma_psi))
+# sqrt(diag(pred$Sigma.psi))
 
 ################################################################################
 ################################################################################
@@ -131,10 +131,6 @@ if (!dir.exists(pic_path)) {dir.create(pic_path)}
 
 # --- Quick checks of site ordering and reference points (visual sanity checks) ---
 plot(S); points(S[c(348,363),], col="red")
-
-Shat = S[order(S[,1]),]
-plot(Shat); points(Shat[c(348,363),], col="red")
-plot(S); points(S[order(S[,1])[c(348,363)],], col="red")
 
 # --- Model summary & derived quantities from deepspat MSP fit ---
 # pred aggregates key outputs at observation sites (and later at queried coordinates)
@@ -578,7 +574,7 @@ grads_EC = sapply(1:nrow(D.warped), function(d) {
   grad_extcoef(c(range_fitted, dof_fitted), D.warped[ref.pts[ref_id], d])
 })
 var_extcoef = sapply(1:nrow(D.warped), function(d) {
-  t(grads_EC[,d])%*%pred$Sigma_psi%*%grads_EC[,d]
+  t(grads_EC[,d])%*%pred$Sigma.psi%*%grads_EC[,d]
 })
 data.plot = data.frame(s1 = S[, 1], s2 = S[, 2], sd = sqrt(var_extcoef))
 p.sd10 = eval(substitute(
@@ -626,7 +622,7 @@ grads_EC = sapply(1:nrow(D.warped), function(d) {
   grad_extcoef(c(range_fitted, dof_fitted), D.warped[ref.pts[ref_id], d])
 })
 var_extcoef = sapply(1:nrow(D.warped), function(d) {
-  t(grads_EC[,d])%*%pred$Sigma_psi%*%grads_EC[,d]
+  t(grads_EC[,d])%*%pred$Sigma.psi%*%grads_EC[,d]
 })
 data.plot = data.frame(s1 = S[, 1], s2 = S[, 2], sd = sqrt(var_extcoef))
 p.sd20 = eval(substitute(

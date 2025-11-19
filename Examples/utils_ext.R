@@ -1,4 +1,5 @@
 # Auxiliary functions for extremes
+library(SpatialExtremes)
 
 # rexceed = function(data, risk_fun) {
 #   func_risk = apply(data, 2, risk_fun)
@@ -107,7 +108,7 @@ edm_est = function(data, coord, model,
     #     c(theta_ij, D[i,j])
     #   }) }))
     # ec.emp <- t(ec.emp)
-    print("-----")
+    print("Done.")
     return(list(edm = ec.emp)) # between 1 and 2
   } else if (model == "r-Pareto") {
     if (is.null(exceed_id)) {
@@ -131,7 +132,7 @@ edm_est = function(data, coord, model,
         c(cep, D[i,j])
       }) })) )
 
-    print("-----")
+    print("Done.")
     return(list(edm = cep.pairs, uprime = u1)) # between 0 and 1
   }
 }

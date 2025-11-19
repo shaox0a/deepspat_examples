@@ -126,7 +126,7 @@ cov_fn_compute <- function(object, newdata1, newdata2, ...) {
 ## Load dataset
 names = load("NepalExtended_mean.rda")
 
-plot(dataset[1:1419,c("s1", "s2")]); points(dataset[c(348,363),c("s1", "s2")], col="red")
+# plot(dataset[1:1419,c("s1", "s2")]); points(dataset[c(348,363),c("s1", "s2")], col="red")
 
 meanY <- mean(dataset$Y_mean)
 sdY <- sd(dataset$Y_mean)
@@ -181,7 +181,7 @@ d1 <- deepspat_nn_ST_GP(f = Y_mean ~ s1 + s2 + year - 1, data = obsdata, g = ~ e
 # Predictions
 locs_new <- t(rbind(alldata$s1, alldata$s2, alldata$year))
 nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-pred_d1 <- predict.deepspat_nn_ST_GP(d1, alldata, nn_id_pred)
+pred_d1 <- predict(d1, alldata, nn_id_pred)
 RMSPE_d1 <- RMSPE(test_data$Y_mean, pred_d1$df_pred$pred_mean[1:nrow(test_data)])
 CRPS_d1 <- CRPS(test_data$Y_mean,
                         pred_d1$df_pred$pred_mean[1:nrow(test_data)],
@@ -200,7 +200,7 @@ d2 <- deepspat_nn_ST_GP(f = Y_mean ~ s1 + s2 + year - 1, data = obsdata, g = ~ 1
 # Predictions
 locs_new <- t(rbind(alldata$s1, alldata$s2, alldata$year))
 nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-pred_d2 <- predict.deepspat_nn_ST_GP(d2, alldata, nn_id_pred)
+pred_d2 <- predict(d2, alldata, nn_id_pred)
 RMSPE_d2 <- RMSPE(test_data$Y_mean, pred_d2$df_pred$pred_mean[1:nrow(test_data)])
 CRPS_d2 <- CRPS(test_data$Y_mean,
                      pred_d2$df_pred$pred_mean[1:nrow(test_data)],
@@ -221,7 +221,7 @@ d3 <- deepspat_nn_ST_GP(f = Y_mean ~ s1 + s2 + year - 1, data = obsdata, g = ~ e
 # Predictions
 locs_new <- t(rbind(alldata$s1, alldata$s2, alldata$year))
 nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-pred_d3 <- predict.deepspat_nn_ST_GP(d3, alldata, nn_id_pred)
+pred_d3 <- predict(d3, alldata, nn_id_pred)
 RMSPE_d3 <- RMSPE(test_data$Y_mean, pred_d3$df_pred$pred_mean[1:nrow(test_data)])
 CRPS_d3 <- CRPS(test_data$Y_mean,
                      pred_d3$df_pred$pred_mean[1:nrow(test_data)],
@@ -240,7 +240,7 @@ d4 <- deepspat_nn_ST_GP(f = Y_mean ~ s1 + s2 + year - 1, data = obsdata, g = ~ 1
 # Predictions
 locs_new <- t(rbind(alldata$s1, alldata$s2, alldata$year))
 nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-pred_d4 <- predict.deepspat_nn_ST_GP(d4, alldata, nn_id_pred)
+pred_d4 <- predict(d4, alldata, nn_id_pred)
 RMSPE_d4 <- RMSPE(test_data$Y_mean, pred_d4$df_pred$pred_mean[1:nrow(test_data)])
 CRPS_d4 <- CRPS(test_data$Y_mean,
                 pred_d4$df_pred$pred_mean[1:nrow(test_data)],
@@ -299,7 +299,7 @@ df_contour_rep = do.call(rbind, replicate(16,
 df_contour_rep$year = rep(2004:2019, each = nrow(df_contour0))
 locs_contour <- t(rbind(df_contour_rep$s1, df_contour_rep$s2, df_contour_rep$year))
 nn_id_contour <- FNN::get.knnx(data = locs_t, query = locs_contour, k = 50)$nn.index
-df_contour.warped = predict.deepspat_nn_ST_GP(d3, df_contour_rep, nn_id_contour)$newdata_swarped
+df_contour.warped = predict(d3, df_contour_rep, nn_id_contour)$newdata_swarped
 
 
 df_contour = df_contour0
@@ -309,7 +309,7 @@ df_contour$yw = df_contour.warped[1:nrow(df_contour0) + (year-2004)*nrow(df_cont
 
 locs_new <- t(rbind(dataset$s1, dataset$s2, dataset$year))
 nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-pred_d3hat <- predict.deepspat_nn_ST_GP(d3, dataset, nn_id_pred)
+pred_d3hat <- predict(d3, dataset, nn_id_pred)
 # ==============================================================================
 ### Plot priginal space
 
@@ -392,7 +392,7 @@ df_verti = data.frame(do.call("rbind", lapply(seq(1, length(verti), 1), function
   newdata = verti[[i]]
   locs_new <- t(rbind(newdata$s1, newdata$s2, newdata$year))
   nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-  swarped_line = predict.deepspat_nn_ST_GP(d3, newdata, nn_id_pred)$newdata_swarped
+  swarped_line = predict(d3, newdata, nn_id_pred)$newdata_swarped
   swarped_line = swarped_line[newdata$year == year,]
   rbind(swarped_line, c(NA, NA))
 }) ))
@@ -400,7 +400,7 @@ df_horiz = data.frame(do.call("rbind", lapply(seq(1, length(horiz), 1), function
   newdata = horiz[[i]]
   locs_new <- t(rbind(newdata$s1, newdata$s2, newdata$year))
   nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-  swarped_line = predict.deepspat_nn_ST_GP(d3, newdata, nn_id_pred)$newdata_swarped
+  swarped_line = predict(d3, newdata, nn_id_pred)$newdata_swarped
   swarped_line = swarped_line[newdata$year == year,]
   rbind(swarped_line, c(NA, NA))
 }) ))
