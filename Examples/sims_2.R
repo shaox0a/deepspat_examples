@@ -52,17 +52,20 @@ coco_object <- coco ( type = "dense",
 coco_object <- cocoOptim (coco_object, ncores = "auto")
 
 pred_cocons <- cocoPredict (coco_object,
-                          newdataset = holes_test,
-                          newlocs = as.matrix(holes_test[,1:2]),
-                          type = "pred")
+                            newdataset = holes_test,
+                            newlocs = as.matrix(holes_test[,1:2]),
+                            type = "pred")
 
 predall_cocons <- cocoPredict (coco_object,
-                         newdataset = holes_all,
-                         newlocs = as.matrix(holes_all[,1:2]),
-                         type = "pred")
+                               newdataset = holes_all,
+                               newlocs = as.matrix(holes_all[,1:2]),
+                               type = "pred")
 
-rmspe_cocons <- RMSPE(holes_test$z, pred_cocons$mean + pred_cocons$trend)
-crps_cocons <- CRPS(holes_test$z, pred_cocons$mean + pred_cocons$trend, pred_cocons$sd.pred^2)
+rmspe_cocons <- RMSPE(holes_test$z, pred_cocons$stochastic + pred_cocons$systematic)
+crps_cocons <- CRPS(holes_test$z, 
+                    pred_cocons$stochastic + pred_cocons$systematic, 
+                    pred_cocons$sd.pred^2)
+
 
 
 ## gstat model
@@ -178,7 +181,3 @@ save(pred_cocons, pred_gp, pred_nngp, pred_frk, pred_gstat,
      rmspe_cocons, rmspe_gp, rmspe_nngp, rmspe_frk, rmspe_gstat,
      crps_cocons, crps_gp, crps_nngp, crps_frk, crps_gstat,
      file = "sim_results_from_cocons.rda")
-
-
-
-

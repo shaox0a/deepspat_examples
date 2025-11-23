@@ -182,8 +182,8 @@ predall_cocons <- cocoPredict (coco_object,
                                newlocs = as.matrix(deepspat_data_all[,1:2]),
                                type = "pred")
 
-rmspe_cocons <- RMSPE(deepspat_data_test$z, pred_cocons$mean + pred_cocons$trend)
-crps_cocons <- CRPS(deepspat_data_test$z, pred_cocons$mean + pred_cocons$trend, pred_cocons$sd.pred^2)
+rmspe_cocons <- RMSPE(deepspat_data_test$z, pred_cocons$stochastic + pred_cocons$systematic)
+crps_cocons <- CRPS(deepspat_data_test$z, pred_cocons$stochastic + pred_cocons$systematic, pred_cocons$sd.pred^2)
 
 
 ### save results
@@ -192,5 +192,3 @@ save(pred_cocons, pred_gp, pred_nngp, pred_frk, pred_gstat,
      rmspe_cocons, rmspe_gp, rmspe_nngp, rmspe_frk, rmspe_gstat,
      crps_cocons, crps_gp, crps_nngp, crps_frk, crps_gstat,
      file = "sim_results_from_deepspat.rda")
-
-
