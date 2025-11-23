@@ -20,10 +20,10 @@ From the repository root:
 cd Examples
 
 # Spatio-temporal Gaussian demo → Pic_nepal_GP_ST/
-Rscript app_GP_ST.R
+Rscript app_model_GP_ST.R && Rscript app_results_GP_ST.R
 
 # Max-stable (Brown–Resnick) demo → Pic_nepal_MSP/
-Rscript app_MSP.R
+Rscript app_model_MSP.R && Rscript app_results_MSP.R
 
 # Optional simulations
 Rscript sims_1.R && Rscript result_sims_1.R
