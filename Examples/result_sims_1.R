@@ -33,7 +33,7 @@ plot_mean_gstat <- ggplot(pred_gstat@data) +
   geom_point(aes(pred_gstat@coords[,1], pred_gstat@coords[,2], color = var1.pred), 
              size = 0.5) +
   scale_color_distiller(palette = "Spectral", 
-                        name = expression(E(bold(Z)[test] ~ "|" ~ bold(Z))),
+                        name = expression(E(bold(Z)[val] ~ "|" ~ bold(Z))),
                         limits = c(-4,4), 
                         oob = scales::squish, 
                         guide = "none") +
@@ -57,7 +57,7 @@ plot_mean_gstat <- ggplot(pred_gstat@data) +
 # 2
 plot_mean_gp <- ggplot(pred_gp$df_pred) +
   geom_point(aes(x, y, color = pred_mean), size = 0.5) +
-  scale_color_distiller(palette = "Spectral", name = expression(E(bold(Z)[test] ~ "|" ~ bold(Z))),
+  scale_color_distiller(palette = "Spectral", name = expression(E(bold(Z)[val] ~ "|" ~ bold(Z))),
                         limits = c(-4,4), oob = scales::squish, guide = "none") +
   theme_bw() + coord_fixed() + theme(text = element_text(size=15)) +
   labs(x = expression(s[1]), y = expression(s[2])) +
@@ -79,7 +79,7 @@ plot_mean_gp <- ggplot(pred_gp$df_pred) +
 # 3
 plot_mean_cocons <- ggplot(data.frame(pred_cocons)) +
   geom_point(aes(pred_gp$df_pred$x, pred_gp$df_pred$y, color = mean + trend), size = 0.5) +
-  scale_color_distiller(palette = "Spectral", name = expression(E(bold(Z)[test] ~ "|" ~ bold(Z))),
+  scale_color_distiller(palette = "Spectral", name = expression(E(bold(Z)[val] ~ "|" ~ bold(Z))),
                         limits = c(-4,4), oob = scales::squish) +
   theme_bw() + coord_fixed() + theme(text = element_text(size=15))  +
   labs(x = expression(s[1]), y = expression(s[2])) +
@@ -101,7 +101,7 @@ plot_mean_cocons <- ggplot(data.frame(pred_cocons)) +
 # 4
 plot_sd_gstat <- ggplot(pred_gstat@data) +
   geom_point(aes(pred_gstat@coords[,1], pred_gstat@coords[,2], color = sqrt(var1.var) ), size = 0.5) +
-  scale_color_distiller(palette = "BrBG", name = expression(sd(bold(Z)[test] ~ "|" ~ bold(Z))),
+  scale_color_distiller(palette = "BrBG", name = expression(sd(bold(Z)[val] ~ "|" ~ bold(Z))),
                         limits = c(0,0.6), oob = scales::squish, guide = "none") +
   theme_bw() + coord_fixed() + theme(text = element_text(size=15))  +
   labs(x = expression(s[1]), y = expression(s[2])) +
@@ -123,7 +123,7 @@ plot_sd_gstat <- ggplot(pred_gstat@data) +
 # 5
 plot_sd_gp <-ggplot(pred_gp$df_pred) +
   geom_point(aes(x, y, color = sqrt(pred_var)), size = 0.5) + # + as.numeric(1/d_gp$precy_tf) ) ), size = 0.5) +
-  scale_color_distiller(palette = "BrBG", name = expression(sd(bold(Z)[test] ~ "|" ~ bold(Z))),
+  scale_color_distiller(palette = "BrBG", name = expression(sd(bold(Z)[val] ~ "|" ~ bold(Z))),
                         limits = c(0,0.6), oob = scales::squish, guide = "none") +
   theme_bw() + coord_fixed() + theme(text = element_text(size=15)) +
   labs(x = expression(s[1]), y = expression(s[2])) +
@@ -145,7 +145,7 @@ plot_sd_gp <-ggplot(pred_gp$df_pred) +
 # 6
 plot_sd_cocons <-ggplot(data.frame(pred_cocons)) +
   geom_point(aes(pred_gp$df_pred$x, pred_gp$df_pred$y, color = sd.pred ), size = 0.5) +
-  scale_color_distiller(palette = "BrBG", name = expression(sd(bold(Z)[test] ~ "|" ~ bold(Z))),
+  scale_color_distiller(palette = "BrBG", name = expression(sd(bold(Z)[val] ~ "|" ~ bold(Z))),
                         limits = c(0,0.6), oob = scales::squish) +
   theme_bw() + coord_fixed() + theme(text = element_text(size=15))  +
   labs(x = expression(s[1]), y = expression(s[2])) +

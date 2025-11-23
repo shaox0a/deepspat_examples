@@ -124,9 +124,9 @@ cov_fn_compute <- function(object, newdata1, newdata2, ...) {
 
 
 ## Load dataset
-names = load("NepalExtended_mean.rda")
+names = load("Nepal_dataset_mean.rda")
 
-# plot(dataset[1:1419,c("s1", "s2")]); points(dataset[c(348,363),c("s1", "s2")], col="red")
+plot(dataset[1:1419,c("s1", "s2")]); points(dataset[c(348,363),c("s1", "s2")], col="red")
 
 meanY <- mean(dataset$Y_mean)
 sdY <- sd(dataset$Y_mean)
@@ -181,11 +181,11 @@ d1 <- deepspat_nn_ST_GP(f = Y_mean ~ s1 + s2 + year - 1, data = obsdata, g = ~ e
 # Predictions
 locs_new <- t(rbind(alldata$s1, alldata$s2, alldata$year))
 nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-pred_d1 <- predict(d1, alldata, nn_id_pred)
+pred_d1 <- predict.deepspat_nn_ST_GP(d1, alldata, nn_id_pred)
 RMSPE_d1 <- RMSPE(test_data$Y_mean, pred_d1$df_pred$pred_mean[1:nrow(test_data)])
 CRPS_d1 <- CRPS(test_data$Y_mean,
-                        pred_d1$df_pred$pred_mean[1:nrow(test_data)],
-                        pred_d1$df_pred$pred_var[1:nrow(test_data)] + 1/d1$precy_tf)
+                pred_d1$df_pred$pred_mean[1:nrow(test_data)],
+                pred_d1$df_pred$pred_var[1:nrow(test_data)] + 1/d1$precy_tf)
 
 
 d2 <- deepspat_nn_ST_GP(f = Y_mean ~ s1 + s2 + year - 1, data = obsdata, g = ~ 1,
@@ -200,11 +200,11 @@ d2 <- deepspat_nn_ST_GP(f = Y_mean ~ s1 + s2 + year - 1, data = obsdata, g = ~ 1
 # Predictions
 locs_new <- t(rbind(alldata$s1, alldata$s2, alldata$year))
 nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-pred_d2 <- predict(d2, alldata, nn_id_pred)
+pred_d2 <- predict.deepspat_nn_ST_GP(d2, alldata, nn_id_pred)
 RMSPE_d2 <- RMSPE(test_data$Y_mean, pred_d2$df_pred$pred_mean[1:nrow(test_data)])
 CRPS_d2 <- CRPS(test_data$Y_mean,
-                     pred_d2$df_pred$pred_mean[1:nrow(test_data)],
-                     pred_d2$df_pred$pred_var[1:nrow(test_data)] + 1/d2$precy_tf)
+                pred_d2$df_pred$pred_mean[1:nrow(test_data)],
+                pred_d2$df_pred$pred_var[1:nrow(test_data)] + 1/d2$precy_tf)
 
 
 # Fit Models: Nonstationary
@@ -221,11 +221,11 @@ d3 <- deepspat_nn_ST_GP(f = Y_mean ~ s1 + s2 + year - 1, data = obsdata, g = ~ e
 # Predictions
 locs_new <- t(rbind(alldata$s1, alldata$s2, alldata$year))
 nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-pred_d3 <- predict(d3, alldata, nn_id_pred)
+pred_d3 <- predict.deepspat_nn_ST_GP(d3, alldata, nn_id_pred)
 RMSPE_d3 <- RMSPE(test_data$Y_mean, pred_d3$df_pred$pred_mean[1:nrow(test_data)])
 CRPS_d3 <- CRPS(test_data$Y_mean,
-                     pred_d3$df_pred$pred_mean[1:nrow(test_data)],
-                     pmax(pred_d3$df_pred$pred_var[1:nrow(test_data)] + as.numeric(1/d3$precy_tf), rep(1e-3, nrow(test_data)))
+                pred_d3$df_pred$pred_mean[1:nrow(test_data)],
+                pmax(pred_d3$df_pred$pred_var[1:nrow(test_data)] + as.numeric(1/d3$precy_tf), rep(1e-3, nrow(test_data)))
 )
 
 d4 <- deepspat_nn_ST_GP(f = Y_mean ~ s1 + s2 + year - 1, data = obsdata, g = ~ 1,
@@ -240,7 +240,7 @@ d4 <- deepspat_nn_ST_GP(f = Y_mean ~ s1 + s2 + year - 1, data = obsdata, g = ~ 1
 # Predictions
 locs_new <- t(rbind(alldata$s1, alldata$s2, alldata$year))
 nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-pred_d4 <- predict(d4, alldata, nn_id_pred)
+pred_d4 <- predict.deepspat_nn_ST_GP(d4, alldata, nn_id_pred)
 RMSPE_d4 <- RMSPE(test_data$Y_mean, pred_d4$df_pred$pred_mean[1:nrow(test_data)])
 CRPS_d4 <- CRPS(test_data$Y_mean,
                 pred_d4$df_pred$pred_mean[1:nrow(test_data)],
@@ -299,7 +299,7 @@ df_contour_rep = do.call(rbind, replicate(16,
 df_contour_rep$year = rep(2004:2019, each = nrow(df_contour0))
 locs_contour <- t(rbind(df_contour_rep$s1, df_contour_rep$s2, df_contour_rep$year))
 nn_id_contour <- FNN::get.knnx(data = locs_t, query = locs_contour, k = 50)$nn.index
-df_contour.warped = predict(d3, df_contour_rep, nn_id_contour)$newdata_swarped
+df_contour.warped = predict.deepspat_nn_ST_GP(d3, df_contour_rep, nn_id_contour)$newdata_swarped
 
 
 df_contour = df_contour0
@@ -309,7 +309,7 @@ df_contour$yw = df_contour.warped[1:nrow(df_contour0) + (year-2004)*nrow(df_cont
 
 locs_new <- t(rbind(dataset$s1, dataset$s2, dataset$year))
 nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-pred_d3hat <- predict(d3, dataset, nn_id_pred)
+pred_d3hat <- predict.deepspat_nn_ST_GP(d3, dataset, nn_id_pred)
 # ==============================================================================
 ### Plot priginal space
 
@@ -354,7 +354,7 @@ grid1 = ggplot(df_verti, aes(x=s1,y=s2)) + geom_path(colour = "gray80", linewidt
         legend.box = "vertical",
         legend.spacing.y = unit(0.4, "lines"),
         legend.margin = margin(5, 5, 5, 5))
-  # scale_x_continuous(breaks = NULL) + scale_y_continuous(breaks = NULL)
+# scale_x_continuous(breaks = NULL) + scale_y_continuous(breaks = NULL)
 grid1
 
 legend_grob <- get_legend(grid1)
@@ -392,7 +392,7 @@ df_verti = data.frame(do.call("rbind", lapply(seq(1, length(verti), 1), function
   newdata = verti[[i]]
   locs_new <- t(rbind(newdata$s1, newdata$s2, newdata$year))
   nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-  swarped_line = predict(d3, newdata, nn_id_pred)$newdata_swarped
+  swarped_line = predict.deepspat_nn_ST_GP(d3, newdata, nn_id_pred)$newdata_swarped
   swarped_line = swarped_line[newdata$year == year,]
   rbind(swarped_line, c(NA, NA))
 }) ))
@@ -400,7 +400,7 @@ df_horiz = data.frame(do.call("rbind", lapply(seq(1, length(horiz), 1), function
   newdata = horiz[[i]]
   locs_new <- t(rbind(newdata$s1, newdata$s2, newdata$year))
   nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-  swarped_line = predict(d3, newdata, nn_id_pred)$newdata_swarped
+  swarped_line = predict.deepspat_nn_ST_GP(d3, newdata, nn_id_pred)$newdata_swarped
   swarped_line = swarped_line[newdata$year == year,]
   rbind(swarped_line, c(NA, NA))
 }) ))
@@ -417,7 +417,7 @@ grid2 = ggplot(df_verti, aes(x=s1,y=s2)) + geom_path(colour = "gray80", linewidt
                       breaks = c(1000, 3000, 5000), labels = c(1000, 3000, 5000)) +
   geom_point(data = data.frame(x = S.plot[ref.pts,1], y = S.plot[ref.pts,2]),
              aes(x, y), size = 2, shape = ref_shap, fill="red", color="black") +
-  xlab(expression(f[n1])) + ylab(expression(f[n2])) +
+  xlab(expression(f[1])) + ylab(expression(f[2])) +
   theme_bw() +
   theme(plot.title = element_text(hjust = 0.5, size=25),
         axis.title=element_text(size=axis.title.size),
@@ -433,7 +433,7 @@ grid2 = ggplot(df_verti, aes(x=s1,y=s2)) + geom_path(colour = "gray80", linewidt
         legend.box = "vertical",
         legend.spacing.y = unit(0.4, "lines"),
         legend.margin = margin(5, 5, 5, 5))
-  # scale_x_continuous(breaks = NULL) + scale_y_continuous(breaks = NULL)
+# scale_x_continuous(breaks = NULL) + scale_y_continuous(breaks = NULL)
 grid2
 
 legend_grob <- get_legend(grid2)
@@ -476,7 +476,7 @@ plot_corr1 <- ggplot(data = newdata2[1:1419+(year-2004)*1419,]) +
   geom_point(aes(s1, s2, color = as.vector(K_1[1:1419+(year-2004)*1419,ref.point1])),
              alpha = 0.9, size = 2, shape = 15) +
   scale_color_gradientn(colors = my_colors,
-                        name = expression(Corr(Y(bold(s)[0]), Y(bold(s)))), limits = c(0,1),
+                        name = expression(Corr(Y(bold(s)[0],t), Y(bold(s),t))), limits = c(0,1),
                         breaks = seq(0,1,0.25),
                         labels = c("0.00", "0.25", "0.50", "0.75", "1.00")) +
   geom_point(aes(x = s1[ref.point1], y = s2[ref.point1]),
@@ -501,9 +501,9 @@ plot_corr1
 
 legend_grob <- get_legend(plot_corr1)
 plot_corr11 = grid.arrange(plot_corr1+theme(legend.position = "none"), legend_grob,
-                      ncol = 2,
-                      widths = unit.c(unit.w1, unit(width1/2.5, "cm")),
-                      heights = unit.c(unit.h1)) #c(width1, width1/3)
+                           ncol = 2,
+                           widths = unit.c(unit.w1, unit(width1/2.5, "cm")),
+                           heights = unit.c(unit.h1)) #c(width1, width1/3)
 
 
 ggsave(paste0(pic_path, "nepal_corr_", ref.point1, ".pdf"),
@@ -559,11 +559,11 @@ ggsave(paste0(pic_path, "nepal_corr_", ref.point2, ".pdf"),
 legend_grob <- get_legend(plot_corr1)
 plot_corr = grid.arrange(plot_corr1+theme(legend.position = "none"),
                          plot_corr2+theme(legend.position = "none"), legend_grob,
-                        ncol = 3,
-                        widths = unit.c(unit.w1, unit.w1, unit(width1/2.5, "cm")),
-                        heights = unit.c(unit.h1)) #c(width1, width1/3)
+                         ncol = 3,
+                         widths = unit.c(unit.w1, unit.w1, unit(width1/2, "cm")),
+                         heights = unit.c(unit.h1)) #c(width1, width1/3)
 ggsave(paste0(pic_path, "nepal_corr", ".pdf"),
-       plot = plot_corr, width = width1+width1+width1/2.5, height = height1, units = "cm")
+       plot = plot_corr, width = width1+width1+width1/2, height = height1, units = "cm")
 
 # plot_temp <- ggplot(data = newdata2) +
 #   geom_tile(aes(s1, s2, fill = Y_mean )) +
@@ -610,6 +610,4 @@ ggsave(paste0(pic_path, "nepal_corr", ".pdf"),
 # 
 # 
 # ggsave(paste0(pic_path, "nepal_temp_", ref.point, ".pdf"),
-
 #        plot = plot_temp1, width = width1+width1/3, height = height1, units = "cm")
-
