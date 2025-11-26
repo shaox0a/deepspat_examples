@@ -11,6 +11,9 @@ library(deepspat)
 library(cocons)
 #data('holes')
 
+# Set working directory to the repo root
+# setwd(...)
+
 # RMSPE
 RMSPE <- function(true, pred){
   sqrt(mean((true - pred)^2))
@@ -191,4 +194,4 @@ save(pred_cocons, pred_gp, pred_nngp, pred_frk, pred_gstat,
      predall_cocons, predall_gp, predall_nngp, predall_frk,
      rmspe_cocons, rmspe_gp, rmspe_nngp, rmspe_frk, rmspe_gstat,
      crps_cocons, crps_gp, crps_nngp, crps_frk, crps_gstat,
-     file = "sim_results_from_deepspat.rda")
+     file = "Examples/sim_results_from_deepspat.rda")

@@ -5,7 +5,8 @@
 ############################################################
 
 rm(list = ls())
-setwd(this.path::here())
+# Set working directory to the repo root
+# setwd(...)
 
 # -------------------------------------------------------------------
 # Packages (only plotting / data manipulation)
@@ -24,10 +25,10 @@ library(gridExtra)
 # -------------------------------------------------------------------
 
 # Original dataset (as in the .rda provided)
-load("NepalExtended_mean.rda")          # provides 'dataset'
+load("Examples/NepalExtended_mean.rda")          # provides 'dataset'
 
 # Objects precomputed by nepal_model_ST_GP.R for d3
-load("Nepal_GP_d3_plot_data.rda")       # year_plot, ref.pts, df_contour_plot,
+load("Examples/Nepal_GP_d3_plot_data.rda")       # year_plot, ref.pts, df_contour_plot,
 # df_verti_warped, df_horiz_warped,
 # S_warped_year, corr_ref1, corr_ref2
 
@@ -37,7 +38,7 @@ year <- year_plot   # just a shorter name
 # Plotting layout parameters
 # -------------------------------------------------------------------
 
-pic_path <- "Pic_nepal_GP_ST/"
+pic_path <- "Examples/Pic_nepal_GP_ST/"
 if (!dir.exists(pic_path)) { dir.create(pic_path) }
 
 width1  <- 11.5

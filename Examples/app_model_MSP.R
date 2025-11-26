@@ -6,9 +6,8 @@
 ###############################################
 
 rm(list = ls())
-
-# Set working directory to the script location
-setwd(this.path::here())
+# Set working directory to the repo root
+# setwd(...)
 
 ###############################################
 # Load core modelling libraries
@@ -25,7 +24,7 @@ library(elevatr)       # Elevation data
 library(contoureR)     # Contour extraction from scattered elevation data
 
 # Custom helper functions: edm_est, extcoef, grad_extcoef, fmadogram, etc.
-source("utils_ext.R")
+source("Examples/utils_ext.R")
 
 
 ###############################################
@@ -41,7 +40,7 @@ app_data <- "NepalExtended"
 # NepalExtended.rds is assumed to contain at least:
 #  - S: locations (lon, lat)
 #  - Z.max: block maxima at each location (columns = replicates)
-simnames <- load(file = "NepalExtended.rds")
+simnames <- load(file = "Examples/NepalExtended.rds")
 print(simnames)
 
 # Block maxima data matrix
@@ -60,7 +59,7 @@ df_data <- df[, 3:ncol(df)]
 # Empirical extremal dependence measure (EDM)
 # for all locations (full grid)
 ###############################################
-edm_est_filename <- paste0(app_data, "_", model, "_empextdep.rds")
+edm_est_filename <- paste0("Examples/", app_data, "_", model, "_empextdep.rds")
 
 # Compute and cache EDM for all site pairs if not already done
 if (!file.exists(edm_est_filename)) {
@@ -100,7 +99,7 @@ dtype  <- "float64"        # TensorFlow dtype
 # Empirical EDM at subsampled locations
 obs_edm_est <- edm_est(obs_data, as.matrix(obs_loc), model)$edm
 saveRDS(obs_edm_est,
-        file = paste0(app_data, "_", model, "_empextdep_train.rds"))
+        file = paste0("Examples/", app_data, "_", model, "_empextdep_train.rds"))
 
 # First column often used as "empirical extremal coefficient" for all pairs
 obs_edm_emp <- obs_edm_est[, 1]
@@ -295,8 +294,8 @@ fit_results <- list(
 
 saveRDS(
   fit_results,
-  file = paste0(app_data, "_", model, "_fitresults.rds")
+  file = paste0("Examples/", app_data, "_", model, "_fitresults.rds")
 )
 
 cat("Model fitting finished. Numerical results saved to:\n",
-    paste0(app_data, "_", model, "_fitresults.rds"), "\n")
+    paste0("Examples/", app_data, "_", model, "_fitresults.rds"), "\n")

@@ -7,7 +7,8 @@
 ############################################################
 
 rm(list = ls())
-setwd(this.path::here())
+# Set working directory to the repo root
+# setwd(...)
 
 # -------------------------------------------------------------------
 # Packages
@@ -88,28 +89,6 @@ cov_fn_compute <- function(object, newdata1, newdata2, ...) {
   # ------------------------------------------------------------------
   if (d$family %in% c("exp_nonstat_sep")){
     
-    cov_exp_tf <- function(x1, x2 = x1, sigma2f, alpha) {
-      
-      d <- ncol(x1)
-      n1 <- nrow(x1)
-      n2 <- nrow(x2)
-
-      x1new <- tf$reshape(x1, c(-1L, 1L, d))
-      x2new <- tf$reshape(x2, c(1L, -1L, d))
-      sep <- x1new - x2new
-      D <- tf$norm(sep, ord = 'euclidean', axis = 2L) %>% tf$square()
-      D <- D + 1e-5
-      D <- tf$sqrt(D)
-      K <- tf$multiply(sigma2f, tf$exp(-alpha * D))
-      
-      return(K)
-    }
-    
-    scale_0_5_tf <- function(s_tf, smin_tf, smax_tf, dtype = "float32") {
-      s_tf <- (s_tf - smin_tf) /(smax_tf - smin_tf) -
-        tf$constant(0.5, dtype = dtype)
-    }
-    
     # Rescale spatial and temporal inputs
     s_in1 <- scale_0_5_tf(s_tf1, d$scalings[[1]]$min, d$scalings[[1]]$max)
     t_in1 <- scale_0_5_tf(t_tf1, d$scalings_t[[1]]$min, d$scalings_t[[1]]$max)
@@ -170,7 +149,7 @@ cov_fn_compute <- function(object, newdata1, newdata2, ...) {
 # Load dataset & basic preprocessing
 # -------------------------------------------------------------------
 
-names <- load("NepalExtended_mean.rda")   # Loads 'dataset'
+names <- load("Examples/NepalExtended_mean.rda")   # Loads 'dataset'
 
 # (Optional quick check plot; can be commented out if you don't want a window)
 # plot(dataset[1:1419, c("s1","s2")]); points(dataset[c(348,363), c("s1","s2")], col="red")
@@ -386,7 +365,7 @@ if (fit_d4) {
 
 if (length(pred_objects) > 0) {
   save(list = pred_objects,
-       file = "Nepal_GP_pred_results.rda")
+       file = "Examples/Nepal_GP_pred_results.rda")
 }
 
 # -------------------------------------------------------------------
@@ -504,6 +483,6 @@ if (fit_d3) {
     df_verti_warped, df_horiz_warped,
     S_warped_year,
     corr_ref1, corr_ref2,
-    file = "Nepal_GP_d3_plot_data.rda"
+    file = "Examples/Nepal_GP_d3_plot_data.rda"
   )
 }

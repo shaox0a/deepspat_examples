@@ -7,9 +7,8 @@
 ###############################################
 
 rm(list = ls())
-
-# Set working directory to the script location
-setwd(this.path::here())
+# Set working directory to the repo root
+# setwd(...)
 
 ###############################################
 # Load libraries for plotting and diagnostics
@@ -28,7 +27,7 @@ library(grid)
 library(gridExtra)
 
 # Custom helper functions: extcoef, grad_extcoef, fmadogram, edm_est, etc.
-source("utils_ext.R")
+source("Examples/utils_ext.R")
 
 
 ###############################################
@@ -46,13 +45,13 @@ app_data <- "NepalExtended"
 #  - df_loc: locations in data frame form
 #  - nepal: ggmap base map object
 ###############################################
-load(paste0(this.path::here(), "/NepalMap.Rdata"))
+load("Examples/NepalMap.Rdata")
 
 
 ###############################################
 # Load numerical model summaries (no `d1` required)
 ###############################################
-fit_results <- readRDS(paste0(app_data, "_", model, "_fitresults.rds"))
+fit_results <- readRDS(paste0("Examples/", app_data, "_", model, "_fitresults.rds"))
 
 # Overwrite S & df_loc with those used in the model fit (for safety)
 S       <- fit_results$S
@@ -77,7 +76,7 @@ ref.pts         <- fit_results$ref_pts
 # Load full data again for EC / FMADogram diagnostics
 # (Z.max is needed for fmadogram)
 ###############################################
-simnames <- load(file = "NepalExtended.rds")
+simnames <- load(file = "Examples/NepalExtended.rds")
 # Now Z.max, S, etc. are available.
 nrepli <- dim(Z.max)[2]
 
@@ -85,7 +84,7 @@ nrepli <- dim(Z.max)[2]
 ###############################################
 # Output directory for figures
 ###############################################
-pic_path <- "Pic_nepal_MSP/"
+pic_path <- "Examples/Pic_nepal_MSP/"
 if (!dir.exists(pic_path)) {
   dir.create(pic_path)
 }

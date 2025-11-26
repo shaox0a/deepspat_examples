@@ -1,7 +1,9 @@
 ### plot pred results
 
-setwd(this.path::here())
-load("sim_results_from_cocons.rda")
+# Set working directory to the repo root
+# setwd(...)
+
+load("Examples/sim_results_from_cocons.rda")
 
 
 # ------------------------------------------------------------------------------
@@ -11,8 +13,8 @@ library(RColorBrewer)
 library(viridis)
 library(grid)
 library(gridExtra)
-# pic_path = "Pic_GP_sim/"
-# if (!dir.exists(pic_path)) {dir.create(pic_path)}
+pic_path = "Examples/Pic_GP_sim/"
+if (!dir.exists(pic_path)) {dir.create(pic_path)}
 
 width1 = 11.5
 unit.w1 = unit(width1, "cm")
@@ -76,7 +78,7 @@ plot_mean_gp <- ggplot(pred_gp$df_pred) +
         legend.margin = margin(5, 5, 5, 5))
 
 plot_mean_cocons <- ggplot(data.frame(pred_cocons)) +
-  geom_point(aes(pred_gp$df_pred$x, pred_gp$df_pred$y, color = mean + trend), size = 0.5) +
+  geom_point(aes(pred_gp$df_pred$x, pred_gp$df_pred$y, color = stochastic + systematic), size = 0.5) +
   scale_color_distiller(palette = "Spectral", name = expression(E(bold(Z)[val] ~ "|" ~ bold(Z))),
                         limits = c(-3,6), oob = scales::squish) +
   theme_bw() + coord_fixed() + theme(text = element_text(size=15)) +
@@ -173,6 +175,6 @@ plots_list <- list(plot_mean_gstat, plot_mean_gp, plot_mean_cocons,
                    plot_sd_gstat, plot_sd_gp, plot_sd_cocons)
 plot_sim_cocons <- wrap_plots(plots_list, nrow = 2)
 
-ggsave(filename="plot_sims_from_cocons.png", plot=plot_sim_cocons,
+ggsave(filename=paste0(pic_path, "plot_sims_from_cocons.png"), plot=plot_sim_cocons,
        device="png", width=30, height=20, scale=1, units="cm", dpi=300)
 
