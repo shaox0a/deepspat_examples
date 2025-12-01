@@ -385,7 +385,7 @@ ggsave(
 # Empirical extremal coefficient (EC) maps
 # for two reference sites (using EDM from file)
 ###############################################
-emp_extdep_filename <- paste0(app_data, "_", model, "_empextdep.rds")
+emp_extdep_filename <- paste0("Examples/", app_data, "_", model, "_empextdep_train.rds")
 ec.mat.all <- readRDS(file = emp_extdep_filename)
 ec.emp.all <- ec.mat.all[, 1]
 

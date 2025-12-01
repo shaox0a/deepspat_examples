@@ -12,6 +12,7 @@ Download the Nepal files from [Zenodo](https://zenodo.org/uploads/17307262) and 
 ```
 Examples/NepalExtended.rds
 Examples/NepalExtended_mean.rda
+Examples/NepalMap.Rdata
 ```
 
 ## How to run (direct execution)
