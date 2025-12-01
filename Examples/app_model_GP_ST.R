@@ -159,9 +159,9 @@ meanY <- mean(dataset$Y_mean)
 sdY   <- sd(dataset$Y_mean)
 dataset$Y_mean <- (dataset$Y_mean - meanY) / sdY
 
-# Train / test split (20% training, 80% testing)
+# Train / test split (50% training, 50% testing)
 set.seed(1)
-sam2 <- sample(1:nrow(dataset), 0.2 * nrow(dataset))
+sam2 <- sample(1:nrow(dataset), 0.5 * nrow(dataset))
 train_data <- dataset[sam2,]
 test_data  <- dplyr::setdiff(dataset, train_data)
 
