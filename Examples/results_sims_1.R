@@ -176,3 +176,4 @@ plot_sim_deepspat
 ggsave(filename=paste0(pic_path, "plot_sims_from_deepspat.png"), plot=plot_sim_deepspat,
        device="png", width=30, height=20, scale=1, units="cm", dpi=300)
 
+
