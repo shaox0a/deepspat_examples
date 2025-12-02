@@ -98,8 +98,6 @@ dtype  <- "float64"        # TensorFlow dtype
 
 # Empirical EDM at subsampled locations
 obs_edm_est <- edm_est(obs_data, as.matrix(obs_loc), model)$edm
-saveRDS(obs_edm_est,
-        file = paste0("Examples/", app_data, "_", model, "_empextdep_train.rds"))
 
 # First column often used as "empirical extremal coefficient" for all pairs
 obs_edm_emp <- obs_edm_est[, 1]
