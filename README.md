@@ -7,14 +7,6 @@ Minimal, reproducible examples for **nonstationary spatial & spatio-temporal mod
   **TensorFlow**: 2.19.0 • **Keras**: 2.15.0 • **TensorFlow Probability**: 0.15.1
 - **R**: ≥ 4.2 with packages: `deepspat`, `reticulate`, `tensorflow`, `tfprobability`, `keras`, `dplyr`, `ggplot2`, `patchwork`, `fields`, `gstat`, `GpGp`, `sp`, `viridis`, `gridExtra`, `ggpubr`, `this.path`
 
-## Data
-Download the Nepal files from [Zenodo](https://zenodo.org/uploads/17307262) and place them in `Examples/`:
-```
-Examples/NepalExtended.rds
-Examples/NepalExtended_mean.rda
-Examples/NepalMap.Rdata
-```
-
 ## How to run (direct execution)
 From the repository root:
 ```
