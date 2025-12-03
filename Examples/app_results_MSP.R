@@ -387,7 +387,7 @@ ggsave(
 ###############################################
 emp_extdep_filename <- paste0("Examples/", app_data, "_", model, "_empextdep.rds")
 ec.mat.all <- readRDS(file = emp_extdep_filename)
-ec.emp.all <- ec.mat.all[, 1]
+ec.emp.all <- ec.mat.all$edm[, 1]
 
 # Reconstruct full symmetric EC matrix with diagonal = 1
 ec.uppermat <- matrix(0, nrow(S), nrow(S))
