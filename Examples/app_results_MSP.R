@@ -10,6 +10,8 @@ rm(list = ls())
 # Set working directory to the repo root
 # setwd(...)
 
+message("Currently running: Creating figures for case study with Nepal maximum temperature")
+
 ###############################################
 # Load libraries for plotting and diagnostics
 ###############################################
@@ -949,3 +951,4 @@ ggsave(
 )
 
 cat("All figures saved under:", pic_path, "\n")
+
