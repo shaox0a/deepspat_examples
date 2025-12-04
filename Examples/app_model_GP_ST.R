@@ -10,6 +10,8 @@ rm(list = ls())
 # Set working directory to the repo root
 # setwd(...)
 
+message("Currently running: Fitting the models for case study with Nepal mean temperature")
+
 # -------------------------------------------------------------------
 # Packages
 # -------------------------------------------------------------------

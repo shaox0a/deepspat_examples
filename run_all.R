@@ -2,6 +2,9 @@
 
 #########################
 
+####### Check availability of required packages #########
+source("Examples/check_packages.R")
+
 ####### Simulation in Section 3.3
 
 #### Fit the models for simulated data from deepspat
@@ -27,8 +30,7 @@ source("Examples/app_results_GP_ST.R")
 
 ####### Application with maximum temperature in Section 4.2
 
-#### Fit the models for mean temperature
+#### Fit the models for maximum temperature
 source("Examples/app_model_MSP.R")
-#### Results for mean temperature
+#### Results for maximum temperature
 source("Examples/app_results_MSP.R")
-

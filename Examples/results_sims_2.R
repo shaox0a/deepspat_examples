@@ -3,6 +3,8 @@
 # Set working directory to the repo root
 # setwd(...)
 
+message("Currently running: Creating figures for simulation study with data from cocons")
+
 load("Examples/sim_results_from_cocons.rda")
 
 

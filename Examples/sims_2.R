@@ -14,6 +14,8 @@ data('holes')
 # Set working directory to the repo root
 # setwd(...)
 
+message("Currently running: Fitting the models for simulation study with data from cocons")
+
 # RMSPE
 RMSPE <- function(true, pred){
   sqrt(mean((true - pred)^2))

@@ -3,6 +3,8 @@
 # Set working directory to the repo root
 # setwd(...)
 
+message("Currently running: Creating figures for simulation study with data from deepspat")
+
 load("Examples/sim_results_from_deepspat.rda")
 
 # ------------------------------------------------------------------------------
