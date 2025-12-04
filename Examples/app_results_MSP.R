@@ -10,8 +10,6 @@ rm(list = ls())
 # Set working directory to the repo root
 # setwd(...)
 
-message("Currently running: Creating figures for case study with Nepal maximum temperature")
-
 ###############################################
 # Load libraries for plotting and diagnostics
 ###############################################
@@ -388,8 +386,8 @@ ggsave(
 # for two reference sites (using EDM from file)
 ###############################################
 emp_extdep_filename <- paste0("Examples/", app_data, "_", model, "_empextdep.rds")
-ec.mat.all <- readRDS(file = emp_extdep_filename)
-ec.emp.all <- ec.mat.all$edm[, 1]
+all_edm_est <- readRDS(file = emp_extdep_filename)
+ec.emp.all <- all_edm_est$edm[, 1]
 
 # Reconstruct full symmetric EC matrix with diagonal = 1
 ec.uppermat <- matrix(0, nrow(S), nrow(S))
@@ -658,8 +656,6 @@ ggsave(
 # Pair-clouds: empirical EC vs distance
 # (original vs warped space, with fitted curve)
 ###############################################
-str(ec.mat.all)
-
 # FMADogram in original and warped spaces
 fmad   <- fmadogram(data = t(Z.max), coord = as.matrix(S.rescaled))
 fmad.w <- fmadogram(data = t(Z.max), coord = as.matrix(S.warped))
