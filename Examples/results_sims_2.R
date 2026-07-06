@@ -5,7 +5,7 @@
 
 message("Currently running: Creating figures for simulation study with data from cocons")
 
-load("Examples/sim_results_from_cocons.rda")
+load("Examples/sim_results_from_cocons.Rdata")
 
 
 # ------------------------------------------------------------------------------

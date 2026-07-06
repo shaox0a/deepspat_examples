@@ -26,11 +26,11 @@ library(gridExtra)
 # Load data and precomputed plot objects
 # -------------------------------------------------------------------
 
-# Original dataset (as in the .rda provided)
-load("Examples/NepalExtended_mean.rda")          # provides 'dataset'
+# Original dataset (as in the .Rdata provided)
+load("Examples/NepalExtended_mean.Rdata")          # provides 'dataset'
 
 # Objects precomputed by nepal_model_ST_GP.R for d3
-load("Examples/Nepal_GP_d3_plot_data.rda")       # year_plot, ref.pts, df_contour_plot,
+load("Examples/Nepal_GP_d3_plot_data.Rdata")       # year_plot, ref.pts, df_contour_plot,
 # df_verti_warped, df_horiz_warped,
 # S_warped_year, corr_ref1, corr_ref2
 

@@ -173,7 +173,7 @@ cov_fn_compute <- function(object, newdata1, newdata2, ...) {
 # Load dataset & basic preprocessing
 # -------------------------------------------------------------------
 
-names <- load("Examples/NepalExtended_mean.rda")   # Loads 'dataset'
+names <- load("Examples/NepalExtended_mean.Rdata")   # Loads 'dataset'
 
 # (Optional quick check plot; can be commented out if you don't want a window)
 # plot(dataset[1:1419, c("s1","s2")]); points(dataset[c(348,363), c("s1","s2")], col="red")
@@ -389,12 +389,12 @@ if (fit_d4) {
 
 if (length(pred_objects) > 0) {
   save(list = pred_objects,
-       file = "Examples/Nepal_GP_pred_results.rda")
+       file = "Examples/Nepal_GP_pred_results.Rdata")
 }
 
 # -------------------------------------------------------------------
 # For d3 only: precompute all quantities needed by plotting script
-#              and save them in a separate .rda file
+#              and save them in a separate .Rdata file
 # -------------------------------------------------------------------
 
 if (fit_d3) {
@@ -507,6 +507,6 @@ if (fit_d3) {
     df_verti_warped, df_horiz_warped,
     S_warped_year,
     corr_ref1, corr_ref2,
-    file = "Examples/Nepal_GP_d3_plot_data.rda"
+    file = "Examples/Nepal_GP_d3_plot_data.Rdata"
   )
 }

@@ -1,6 +1,6 @@
 ###############################################
 # 02_nepal_MSP_results.R
-# - Load precomputed model summaries from *_fitresults.rds
+# - Load precomputed model summaries from *_fitresults.Rdata
 # - Load map / grid data
 # - Produce all figures (original vs warped space, EC maps, clouds, SD maps)
 #   without re-fitting the model and without needing the object `d1`
@@ -53,7 +53,7 @@ load("Examples/NepalMap.Rdata")
 ###############################################
 # Load numerical model summaries (no `d1` required)
 ###############################################
-fit_results <- readRDS(paste0("Examples/", app_data, "_", model, "_fitresults.rds"))
+fit_results <- readRDS(paste0("Examples/", app_data, "_", model, "_fitresults.Rdata"))
 
 # Overwrite S & df_loc with those used in the model fit (for safety)
 S       <- fit_results$S
@@ -78,7 +78,7 @@ ref.pts         <- fit_results$ref_pts
 # Load full data again for EC / FMADogram diagnostics
 # (Z.max is needed for fmadogram)
 ###############################################
-simnames <- load(file = "Examples/NepalExtended.rds")
+simnames <- load(file = "Examples/NepalExtended.Rdata")
 # Now Z.max, S, etc. are available.
 nrepli <- dim(Z.max)[2]
 
@@ -387,7 +387,7 @@ ggsave(
 # Empirical extremal coefficient (EC) maps
 # for two reference sites (using EDM from file)
 ###############################################
-emp_extdep_filename <- paste0("Examples/", app_data, "_", model, "_empextdep.rds")
+emp_extdep_filename <- paste0("Examples/", app_data, "_", model, "_empextdep.Rdata")
 all_edm_est <- readRDS(file = emp_extdep_filename)
 ec.emp.all <- all_edm_est$edm[, 1]
 

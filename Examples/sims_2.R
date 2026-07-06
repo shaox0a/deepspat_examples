@@ -185,4 +185,4 @@ save(pred_cocons, pred_gp, pred_nngp, pred_frk, pred_gstat,
      predall_cocons, predall_gp, predall_nngp, predall_frk,
      rmspe_cocons, rmspe_gp, rmspe_nngp, rmspe_frk, rmspe_gstat,
      crps_cocons, crps_gp, crps_nngp, crps_frk, crps_gstat,
-     file = "Examples/sim_results_from_cocons.rda")
+     file = "Examples/sim_results_from_cocons.Rdata")

@@ -39,10 +39,10 @@ app_data <- "NepalExtended"
 ###############################################
 # Load main data (S, Z.max, etc.)
 ###############################################
-# NepalExtended.rds is assumed to contain at least:
+# NepalExtended.Rdata is assumed to contain at least:
 #  - S: locations (lon, lat)
 #  - Z.max: block maxima at each location (columns = replicates)
-simnames <- load(file = "Examples/NepalExtended.rds")
+simnames <- load(file = "Examples/NepalExtended.Rdata")
 print(simnames)
 
 # Block maxima data matrix
@@ -61,7 +61,7 @@ df_data <- df[, 3:ncol(df)]
 # Empirical extremal dependence measure (EDM)
 # for all locations (full grid)
 ###############################################
-edm_est_filename <- paste0("Examples/", app_data, "_", model, "_empextdep.rds")
+edm_est_filename <- paste0("Examples/", app_data, "_", model, "_empextdep.Rdata")
 
 # Compute and cache EDM for all site pairs if not already done
 if (!file.exists(edm_est_filename)) {
@@ -269,7 +269,7 @@ ref_pts <- c(549L, 1317L)
 
 ###############################################
 # Collect all results needed for plotting
-# and save them to a single RDS file
+# and save them to a single Rdata file
 ###############################################
 fit_results <- list(
   app_data      = app_data,
@@ -294,8 +294,8 @@ fit_results <- list(
 
 saveRDS(
   fit_results,
-  file = paste0("Examples/", app_data, "_", model, "_fitresults.rds")
+  file = paste0("Examples/", app_data, "_", model, "_fitresults.Rdata")
 )
 
 cat("Model fitting finished. Numerical results saved to:\n",
-    paste0("Examples/", app_data, "_", model, "_fitresults.rds"), "\n")
+    paste0("Examples/", app_data, "_", model, "_fitresults.Rdata"), "\n")
