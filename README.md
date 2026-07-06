@@ -25,7 +25,11 @@ The output folders are:
 
 ## 2. Installation
 
-To help users prepare a reproducible runtime environment, we provide the setup workflow below.
+To help users prepare a reproducible runtime environment, we provide the script:
+
+- `reproduce_prepare.R`
+
+This script was used to test the code on a fresh Windows machine. It is included as a reference for environment setup, rather than as a one-click installation script for all users.
 
 Because users may have different local machine settings, such as different R versions or missing system tools, the commands below may need to be adapted to the local system configuration. In particular, some components may require manual setup, such as:
 
