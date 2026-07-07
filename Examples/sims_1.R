@@ -41,7 +41,7 @@ deepspat_data_train <- deepspat_data_all[sample(1:nrow(deepspat_data_all), 1500)
 deepspat_data_test <- setdiff(deepspat_data_all, deepspat_data_train)
 
 save(deepspat_data_all, deepspat_data_train, deepspat_data_test,
-     file = "sim_deepspat_datasets.Rdata")
+     file = "Examples/Data/sim_deepspat_datasets.RData")
 
 ### Fit models
 
@@ -156,7 +156,7 @@ save(pred_gp, pred_nngp, pred_frk, pred_gstat,
      predall_gp, predall_nngp, predall_frk,
      rmspe_gp, rmspe_nngp, rmspe_frk, rmspe_gstat,
      crps_gp, crps_nngp, crps_frk, crps_gstat,
-     file = "sim_results_from_deepspat.Rdata")
+     file = "Examples/Data/sim_results_from_deepspat.RData")
 
 
 
@@ -196,4 +196,4 @@ save(pred_cocons, pred_gp, pred_nngp, pred_frk, pred_gstat,
      predall_cocons, predall_gp, predall_nngp, predall_frk,
      rmspe_cocons, rmspe_gp, rmspe_nngp, rmspe_frk, rmspe_gstat,
      crps_cocons, crps_gp, crps_nngp, crps_frk, crps_gstat,
-     file = "Examples/sim_results_from_deepspat.Rdata")
+     file = "Examples/Data/sim_results_from_deepspat.RData")

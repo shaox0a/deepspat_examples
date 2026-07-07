@@ -1,6 +1,6 @@
 ###############################################
 # 02_nepal_MSP_results.R
-# - Load precomputed model summaries from *_fitresults.Rdata
+# - Load precomputed model summaries from *_fitresults.rds
 # - Load map / grid data
 # - Produce all figures (original vs warped space, EC maps, clouds, SD maps)
 #   without re-fitting the model and without needing the object `d1`
@@ -40,20 +40,20 @@ app_data <- "NepalExtended"
 
 
 ###############################################
-# Load map-related objects (NepalMap.Rdata)
+# Load map-related objects (NepalMap.RData)
 # Typically contains:
 #  - S: locations
 #  - df: grid df with "s1","s2","elev" for the background tile
 #  - df_loc: locations in data frame form
 #  - nepal: ggmap base map object
 ###############################################
-load("Examples/NepalMap.Rdata")
+load("Examples/Data/NepalMap.RData")
 
 
 ###############################################
 # Load numerical model summaries (no `d1` required)
 ###############################################
-fit_results <- readRDS(paste0("Examples/", app_data, "_", model, "_fitresults.Rdata"))
+fit_results <- readRDS(paste0("Examples/Data/", app_data, "_", model, "_fitresults.rds"))
 
 # Overwrite S & df_loc with those used in the model fit (for safety)
 S       <- fit_results$S
@@ -78,7 +78,7 @@ ref.pts         <- fit_results$ref_pts
 # Load full data again for EC / FMADogram diagnostics
 # (Z.max is needed for fmadogram)
 ###############################################
-simnames <- load(file = "Examples/NepalExtended.Rdata")
+simnames <- load(file = "Examples/Data/NepalExtended.RData")
 # Now Z.max, S, etc. are available.
 nrepli <- dim(Z.max)[2]
 
@@ -150,7 +150,7 @@ ref.pts <- ref.pts
 ###############################################
 # Basemap: elevation raster over Nepal with reference sites
 ###############################################
-p.elev <- ggmap(nepal) +  # 'nepal' comes from NepalMap.Rdata
+p.elev <- ggmap(nepal) +  # 'nepal' comes from NepalMap.RData
   geom_tile(
     df_elev,
     mapping = aes(x = s1, y = s2, fill = elev),
@@ -387,7 +387,7 @@ ggsave(
 # Empirical extremal coefficient (EC) maps
 # for two reference sites (using EDM from file)
 ###############################################
-emp_extdep_filename <- paste0("Examples/", app_data, "_", model, "_empextdep.Rdata")
+emp_extdep_filename <- paste0("Examples/Data/", app_data, "_", model, "_empextdep.rds")
 all_edm_est <- readRDS(file = emp_extdep_filename)
 ec.emp.all <- all_edm_est$edm[, 1]
 
