@@ -6,15 +6,27 @@
 ###############################################
 
 rm(list = ls())
-# Set working directory to the repo root
-# setwd(...)
+examples_path <- NULL
+# Specify the path to the deepspat examples directory.
+deepspat_path <- NULL
+# Set `deepspat_path` to a local package path, or NULL to use library(deepspat).
+if (!is.null(examples_path)) {
+  setwd(examples_path)
+}
 
 message("Currently running: Fitting the models for case study with Nepal maximum temperature")
 
 ###############################################
 # Load core modelling libraries
 ###############################################
-library(deepspat)      # Deep spatial deformation + MSP models
+if (is.null(deepspat_path)) {
+  library(deepspat)
+} else {
+  pkgload::load_all(
+    deepspat_path,
+    quiet = TRUE
+  )
+}
 library(tensorflow)    # Backend for deepspat
 library(keras)
 library(tfprobability)
@@ -149,18 +161,29 @@ d1 <- deepspat_MSP(
   p       = 0.01                   # Tail probability level for extremes
 )
 
+print(d1)
+d1_summary <- summary(d1)
+print(d1_summary)
+
 # NOTE:
 # We do NOT attempt to save `d1` directly, because it contains TensorFlow
 # sessions/graphs that are cumbersome to serialize robustly.
 # Instead, we now extract and save *all numeric summaries* needed later.
 
+###############################################
+# Reference sites (used throughout the plots)
+###############################################
+ref_pts <- c(549L, 1317L)
+
 
 ###############################################
 # Extract numeric summaries from fitted model
 ###############################################
-# Summary at all original locations (df_loc)
-# This includes rescaled coordinates, warped coordinates, and parameter estimates.
-pred <- summary(d1, df_loc)
+# Prediction at all original locations (df_loc).
+# This includes rescaled coordinates, warped coordinates, fitted dependence
+# parameters, Sigma.psi, and one reference-site dependence map.
+pred <- predict(d1, df_loc, type = "dependence",
+                reference = ref_pts[1L], se = TRUE)
 
 # Rescaled and warped coordinates
 S_rescaled <- pred$srescaled    # Rescaled original coordinates
@@ -175,11 +198,20 @@ Sigma_psi <- pred$Sigma.psi
 
 
 ###############################################
+# Examples of the new S3 plot methods
+# These are quick checks only and are not saved.
+###############################################
+plot(d1, type = "space", pred = pred)
+plot(d1, type = "dependence", pred = pred)
+plot(d1, type = "uncertainty", pred = pred)
+
+
+###############################################
 # Precompute elevation contours and their warping
 ###############################################
 # This block reproduces the elevation-based contours that are later used
 # in the plotting script, BUT also applies the warping f(s) to each
-# contour vertex using `summary(d1, ..., F)`.
+# contour vertex using `predict(d1, ..., type = "warp")`.
 
 # Elevation extraction (EPSG:4326) at original locations S
 elev_extract <- elevatr::get_elev_point(
@@ -197,10 +229,10 @@ df_contour <- contoureR::getContourLines(df_elev, nlevels = 4)
 # Columns are typically: x, y (coordinates), z (elevation), Group, level, etc.
 
 # Warp contour vertices into warped space using f(s)
-cont_warped <- summary(
+cont_warped <- predict(
   d1,
   data.frame(s1 = df_contour$x, s2 = df_contour$y),
-  F  # No uncertainty needed, only s_warped
+  type = "warp"  # No uncertainty needed, only s_warped
 )$swarped
 
 # Attach warped coordinates (xw, yw) for later plotting
@@ -215,7 +247,7 @@ df_contour$yw <- cont_warped[, 2]
 #  - grid lines in original space (constructed only from S)
 #  - grid lines in warped space (constructed from warped S values)
 # However, to obtain the warped grid lines, it originally used
-# `summary(d1, verti[[i]], F)$swarped`. Since `d1` will not be saved,
+# `predict(d1, verti[[i]], type = "warp")$swarped`. Since `d1` will not be saved,
 # we precompute them here.
 
 # Unique longitudes and latitudes
@@ -243,7 +275,7 @@ df_verti_warped <- data.frame(
   do.call(
     "rbind",
     lapply(seq_along(verti), function(i) {
-      warped_i <- summary(d1, verti[[i]], F)$swarped
+      warped_i <- predict(d1, verti[[i]], type = "warp")$swarped
       rbind(warped_i, c(NA, NA))  # NA separator between lines
     })
   )
@@ -252,19 +284,13 @@ df_horiz_warped <- data.frame(
   do.call(
     "rbind",
     lapply(seq_along(horiz), function(i) {
-      warped_i <- summary(d1, horiz[[i]], F)$swarped
+      warped_i <- predict(d1, horiz[[i]], type = "warp")$swarped
       rbind(warped_i, c(NA, NA))  # NA separator between lines
     })
   )
 )
 
 names(df_verti_warped) <- names(df_horiz_warped) <- c("s1", "s2")
-
-
-###############################################
-# Reference sites (used throughout the plots)
-###############################################
-ref_pts <- c(549L, 1317L)
 
 
 ###############################################

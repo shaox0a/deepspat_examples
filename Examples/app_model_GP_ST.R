@@ -7,15 +7,27 @@
 ############################################################
 
 rm(list = ls())
-# Set working directory to the repo root
-# setwd(...)
+examples_path <- NULL
+# Specify the path to the deepspat examples directory.
+deepspat_path <- NULL
+# Set `deepspat_path` to a local package path, or NULL to use library(deepspat).
+if (!is.null(examples_path)) {
+  setwd(examples_path)
+}
 
 message("Currently running: Fitting the models for case study with Nepal mean temperature")
 
 # -------------------------------------------------------------------
 # Packages
 # -------------------------------------------------------------------
-library(reticulate)
+if (is.null(deepspat_path)) {
+  library(deepspat)
+} else {
+  pkgload::load_all(
+    deepspat_path,
+    quiet = TRUE
+  )
+}
 library(tensorflow)
 library(tfprobability)
 library(keras)
@@ -23,8 +35,6 @@ library(keras)
 library(dplyr)
 library(fields)
 library(GpGp)
-library(devtools)
-library(deepspat)
 
 library(verification)   # CRPS
 
@@ -268,22 +278,27 @@ if (fit_d1) {
     par_init = initvars(l_top_layer = 0.5),
     learn_rates = init_learn_rates(eta_mean = 0.01)
   )
+
+  print(d1)
+  d1_summary <- summary(d1)
+  print(d1_summary)
   
   locs_new   <- t(rbind(alldata$s1, alldata$s2, alldata$year))
   nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-  pred_d1    <- predict(d1, alldata, nn_id_pred)
+  pred_process_d1 <- predict(d1, alldata, nn_id = nn_id_pred,
+                             type = "process")
   
   RMSPE_d1 <- RMSPE(
     test_data$Y_mean,
-    pred_d1$df_pred$pred_mean[1:nrow(test_data)]
+    pred_process_d1$df_pred$pred_mean[1:nrow(test_data)]
   )
   CRPS_d1  <- CRPS(
     test_data$Y_mean,
-    pred_d1$df_pred$pred_mean[1:nrow(test_data)],
-    pred_d1$df_pred$pred_var[1:nrow(test_data)] + 1/d1$precy_tf
+    pred_process_d1$df_pred$pred_mean[1:nrow(test_data)],
+    pred_process_d1$df_pred$pred_var[1:nrow(test_data)] + 1/d1$precy_tf
   )
   
-  pred_objects <- c(pred_objects, "pred_d1", "RMSPE_d1", "CRPS_d1")
+  pred_objects <- c(pred_objects, "pred_process_d1", "RMSPE_d1", "CRPS_d1")
 }
 
 if (fit_d2) {
@@ -297,22 +312,27 @@ if (fit_d2) {
     par_init = initvars(l_top_layer = 0.5),
     learn_rates = init_learn_rates(eta_mean = 0.01)
   )
+
+  print(d2)
+  d2_summary <- summary(d2)
+  print(d2_summary)
   
   locs_new   <- t(rbind(alldata$s1, alldata$s2, alldata$year))
   nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-  pred_d2    <- predict(d2, alldata, nn_id_pred)
+  pred_process_d2 <- predict(d2, alldata, nn_id = nn_id_pred,
+                             type = "process")
   
   RMSPE_d2 <- RMSPE(
     test_data$Y_mean,
-    pred_d2$df_pred$pred_mean[1:nrow(test_data)]
+    pred_process_d2$df_pred$pred_mean[1:nrow(test_data)]
   )
   CRPS_d2  <- CRPS(
     test_data$Y_mean,
-    pred_d2$df_pred$pred_mean[1:nrow(test_data)],
-    pred_d2$df_pred$pred_var[1:nrow(test_data)] + 1/d2$precy_tf
+    pred_process_d2$df_pred$pred_mean[1:nrow(test_data)],
+    pred_process_d2$df_pred$pred_var[1:nrow(test_data)] + 1/d2$precy_tf
   )
   
-  pred_objects <- c(pred_objects, "pred_d2", "RMSPE_d2", "CRPS_d2")
+  pred_objects <- c(pred_objects, "pred_process_d2", "RMSPE_d2", "CRPS_d2")
 }
 
 # -------------------------------------------------------------------
@@ -330,25 +350,30 @@ if (fit_d3) {
     par_init = initvars(l_top_layer = 0.1),
     learn_rates = init_learn_rates(eta_mean = 0.003, LFTpars = 0.001)
   )
+
+  print(d3)
+  d3_summary <- summary(d3)
+  print(d3_summary)
   
   locs_new   <- t(rbind(alldata$s1, alldata$s2, alldata$year))
   nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-  pred_d3    <- predict(d3, alldata, nn_id_pred)
+  pred_process_d3 <- predict(d3, alldata, nn_id = nn_id_pred,
+                             type = "process")
   
   RMSPE_d3 <- RMSPE(
     test_data$Y_mean,
-    pred_d3$df_pred$pred_mean[1:nrow(test_data)]
+    pred_process_d3$df_pred$pred_mean[1:nrow(test_data)]
   )
   CRPS_d3  <- CRPS(
     test_data$Y_mean,
-    pred_d3$df_pred$pred_mean[1:nrow(test_data)],
+    pred_process_d3$df_pred$pred_mean[1:nrow(test_data)],
     pmax(
-      pred_d3$df_pred$pred_var[1:nrow(test_data)] + as.numeric(1/d3$precy_tf),
+      pred_process_d3$df_pred$pred_var[1:nrow(test_data)] + as.numeric(1/d3$precy_tf),
       rep(1e-3, nrow(test_data))
     )
   )
   
-  pred_objects <- c(pred_objects, "pred_d3", "RMSPE_d3", "CRPS_d3")
+  pred_objects <- c(pred_objects, "pred_process_d3", "RMSPE_d3", "CRPS_d3")
 }
 
 if (fit_d4) {
@@ -362,25 +387,30 @@ if (fit_d4) {
     par_init = initvars(l_top_layer = 0.1),
     learn_rates = init_learn_rates(eta_mean = 0.003, LFTpars = 0.001)
   )
+
+  print(d4)
+  d4_summary <- summary(d4)
+  print(d4_summary)
   
   locs_new   <- t(rbind(alldata$s1, alldata$s2, alldata$year))
   nn_id_pred <- FNN::get.knnx(data = locs_t, query = locs_new, k = 50)$nn.index
-  pred_d4    <- predict(d4, alldata, nn_id_pred)
+  pred_process_d4 <- predict(d4, alldata, nn_id = nn_id_pred,
+                             type = "process")
   
   RMSPE_d4 <- RMSPE(
     test_data$Y_mean,
-    pred_d4$df_pred$pred_mean[1:nrow(test_data)]
+    pred_process_d4$df_pred$pred_mean[1:nrow(test_data)]
   )
   CRPS_d4  <- CRPS(
     test_data$Y_mean,
-    pred_d4$df_pred$pred_mean[1:nrow(test_data)],
+    pred_process_d4$df_pred$pred_mean[1:nrow(test_data)],
     pmax(
-      pred_d4$df_pred$pred_var[1:nrow(test_data)] + as.numeric(1/d4$precy_tf),
+      pred_process_d4$df_pred$pred_var[1:nrow(test_data)] + as.numeric(1/d4$precy_tf),
       rep(1e-3, nrow(test_data))
     )
   )
   
-  pred_objects <- c(pred_objects, "pred_d4", "RMSPE_d4", "CRPS_d4")
+  pred_objects <- c(pred_objects, "pred_process_d4", "RMSPE_d4", "CRPS_d4")
 }
 
 # -------------------------------------------------------------------
@@ -421,11 +451,12 @@ if (fit_d3) {
                           newdata_contour$s2,
                           newdata_contour$year))
   nn_id_contour <- FNN::get.knnx(data = locs_t, query = locs_contour, k = 50)$nn.index
-  pred_contour  <- predict(d3, newdata_contour, nn_id_contour)
+  pred_warp_contour <- predict(d3, newdata_contour,
+                               nn_id = nn_id_contour, type = "warp")
   
   df_contour_plot <- df_contour0
-  df_contour_plot$xw <- pred_contour$newdata_swarped[,1]
-  df_contour_plot$yw <- pred_contour$newdata_swarped[,2]
+  df_contour_plot$xw <- pred_warp_contour$newdata_swarped[,1]
+  df_contour_plot$yw <- pred_warp_contour$newdata_swarped[,2]
   
   # -----------------------------
   # 2) Warped grid lines (vertical & horizontal) at year_plot
@@ -456,9 +487,9 @@ if (fit_d3) {
                                newdata_line$year))
       nn_id_line <- FNN::get.knnx(data = locs_t,
                                   query = locs_new_line, k = 50)$nn.index
-      pred_line <- predict(d3, newdata_line, nn_id_line)
-      line_coords <- pred_line$newdata_swarped
-      rbind(line_coords, c(NA, NA))
+      pred_warp_line <- predict(d3, newdata_line,
+                                nn_id = nn_id_line, type = "warp")
+      rbind(pred_warp_line$newdata_swarped, c(NA, NA))
     }))
   )
   names(df_verti_warped) <- c("s1", "s2")
@@ -470,9 +501,9 @@ if (fit_d3) {
                                newdata_line$year))
       nn_id_line <- FNN::get.knnx(data = locs_t,
                                   query = locs_new_line, k = 50)$nn.index
-      pred_line <- predict(d3, newdata_line, nn_id_line)
-      line_coords <- pred_line$newdata_swarped
-      rbind(line_coords, c(NA, NA))
+      pred_warp_line <- predict(d3, newdata_line,
+                                nn_id = nn_id_line, type = "warp")
+      rbind(pred_warp_line$newdata_swarped, c(NA, NA))
     }))
   )
   names(df_horiz_warped) <- c("s1", "s2")
@@ -486,9 +517,21 @@ if (fit_d3) {
                        dataset_year$year))
   nn_id_year <- FNN::get.knnx(data = locs_t,
                               query = locs_year, k = 50)$nn.index
-  pred_year <- predict(d3, dataset_year, nn_id_year)
-  S_warped_year <- as.data.frame(pred_year$newdata_swarped)
+  pred_process_year <- predict(d3, dataset_year, nn_id = nn_id_year,
+                               type = "process")
+  S_warped_year <- as.data.frame(pred_process_year$newdata_swarped)
   names(S_warped_year) <- c("f1", "f2")
+
+  # Examples of the new S3 plot methods. These are quick checks only
+  # and are not saved.
+  pred_cov_year_ref1 <- predict(d3, dataset_year, type = "covariance",
+                                reference = ref.pts[1L])
+  plot(d3, type = "space", pred = pred_process_year)
+  plot(d3, type = "prediction", pred = pred_process_year)
+  plot(d3, type = "covariance", pred = pred_cov_year_ref1,
+       value = "correlation")
+  plot(d3, type = "covariance", pred = pred_cov_year_ref1,
+       value = "covariance")
   
   # -----------------------------
   # 4) Correlation vectors for the two reference sites

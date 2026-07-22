@@ -1,7 +1,10 @@
 ### plot pred results
 
-# Set working directory to the repo root
-# setwd(...)
+examples_path <- NULL
+# Specify the path to the deepspat examples directory.
+if (!is.null(examples_path)) {
+  setwd(examples_path)
+}
 
 message("Currently running: Creating figures for simulation study with data from deepspat")
 

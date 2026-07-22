@@ -5,8 +5,11 @@
 ############################################################
 
 rm(list = ls())
-# Set working directory to the repo root
-# setwd(...)
+examples_path <- NULL
+# Specify the path to the deepspat examples directory.
+if (!is.null(examples_path)) {
+  setwd(examples_path)
+}
 
 message("Currently running: Creating figures for case study with Nepal mean temperature")
 

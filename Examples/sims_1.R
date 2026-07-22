@@ -1,4 +1,19 @@
-library(reticulate)
+examples_path <- NULL
+# Specify the path to the deepspat examples directory.
+deepspat_path <- NULL
+# Set `deepspat_path` to a local package path, or NULL to use library(deepspat).
+if (!is.null(examples_path)) {
+  setwd(examples_path)
+}
+
+if (is.null(deepspat_path)) {
+  library(deepspat)
+} else {
+  pkgload::load_all(
+    deepspat_path,
+    quiet = TRUE
+  )
+}
 library(GpGp)
 library(tensorflow)
 library(keras)
@@ -6,13 +21,8 @@ library(tfprobability)
 library(dplyr)
 library(fields)
 library(ggplot2)
-library(devtools)
-library(deepspat)
 library(cocons)
 #data('holes')
-
-# Set working directory to the repo root
-# setwd(...)
 
 message("Currently running: Fitting the models for simulation study with data from deepspat")
 
@@ -86,13 +96,28 @@ d_gp <- deepspat_GP(f = z ~ x + y - 1,
                     learn_rates = init_learn_rates(eta_mean = 0.02)
 )
 
+print(d_gp)
+d_gp_summary <- summary(d_gp)
+print(d_gp_summary)
 
-pred_gp <- predict(d_gp, deepspat_data_test)
-predall_gp <- predict(d_gp, deepspat_data_all)
+pred_gp <- predict(d_gp, deepspat_data_test, type = "process")
+predall_gp <- predict(d_gp, deepspat_data_all, type = "process")
 
 rmspe_gp <- RMSPE(deepspat_data_test$z, pred_gp$df_pred$pred_mean)
 crps_gp <- CRPS(deepspat_data_test$z, pred_gp$df_pred$pred_mean, pred_gp$df_pred$pred_var +
                   as.numeric(1/d_gp$precy_tf))
+
+# Examples of the new S3 plot methods. These are quick checks only
+# and are not saved.
+plot_data_gp <- deepspat_data_test[seq_len(min(500L, nrow(deepspat_data_test))), ]
+pred_cov_gp <- predict(d_gp, plot_data_gp, type = "covariance",
+                       reference = 1L)
+plot(d_gp, type = "space", pred = predall_gp)
+plot(d_gp, type = "prediction", pred = pred_gp)
+plot(d_gp, type = "covariance", pred = pred_cov_gp,
+     value = "correlation")
+plot(d_gp, type = "covariance", pred = pred_cov_gp,
+     value = "covariance")
 
 ## nngp model
 # Set up order and neighbor
@@ -120,21 +145,35 @@ d_nngp <- deepspat_nn_GP(f = z ~ x + y - 1,
                          par_init = initvars(l_top_layer = 0.5),
                          learn_rates = init_learn_rates(eta_mean = 0.02))
 
+print(d_nngp)
+d_nngp_summary <- summary(d_nngp)
+print(d_nngp_summary)
 
 nn_id_pred <- FNN::get.knnx(data = locs,
                             query = as.matrix(deepspat_data_test[,c("x", "y")]),
                             k = 50)$nn.index
-pred_nngp <- predict(d_nngp, deepspat_data_test, nn_id_pred)
+pred_nngp <- predict(d_nngp, deepspat_data_test,
+                     nn_id = nn_id_pred, type = "process")
 
 nn_id_pred <- FNN::get.knnx(data = locs,
                             query = as.matrix(deepspat_data_all[,c("x", "y")]),
                             k = 50)$nn.index
-predall_nngp <- predict(d_nngp, deepspat_data_all, nn_id_pred)
+predall_nngp <- predict(d_nngp, deepspat_data_all,
+                        nn_id = nn_id_pred, type = "process")
 
 
 rmspe_nngp <- RMSPE(deepspat_data_test$z, pred_nngp$df_pred$pred_mean)
 crps_nngp <- CRPS(deepspat_data_test$z, pred_nngp$df_pred$pred_mean, pred_nngp$df_pred$pred_var + 
                     as.numeric(1/d_nngp$precy_tf))
+
+pred_cov_nngp <- predict(d_nngp, plot_data_gp, type = "covariance",
+                         reference = 1L)
+plot(d_nngp, type = "space", pred = predall_nngp)
+plot(d_nngp, type = "prediction", pred = pred_nngp)
+plot(d_nngp, type = "covariance", pred = pred_cov_nngp,
+     value = "correlation")
+plot(d_nngp, type = "covariance", pred = pred_cov_nngp,
+     value = "covariance")
 
 ## frk model
 layers <- c(layers_gp,
