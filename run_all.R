@@ -1,6 +1,18 @@
 ###### Script to run all the examples in the paper
+###### Run from the repository root:
+###### Rscript run_all.R
+###### Rscript Examples/app_model_GP_ST.R
 
 #########################
+
+examples_path <- this.path::this.dir()
+setwd(examples_path)
+
+####### Use the Python environment created by reproduce_prepare.R #########
+library(reticulate)
+reticulate::use_virtualenv(file.path(examples_path, "deepspat_venv"), required = TRUE)
+# The Python path shown below should point to `deepspat_venv`.
+reticulate::py_config()
 
 ####### Check availability of required packages #########
 source("Examples/check_packages.R")

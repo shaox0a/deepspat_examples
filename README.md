@@ -16,12 +16,12 @@ The folder `Examples/` contains:
 - `app_results_MSP.R`: result processing and plotting for the max-stable example
 - `sims_1.R`, `results_sims_1.R`: optional simulation workflow 1
 - `sims_2.R`, `results_sims_2.R`: optional simulation workflow 2
-- `run_all.R`: optional script for running all examples directly
+- `run_all.R` (repository root): optional script for running all examples directly
 
 The output folders are:
 
-- `Pic_nepal_GP_ST/`: figures and results for the spatio-temporal Gaussian demo
-- `Pic_nepal_MSP/`: figures and results for the Brown–Resnick max-stable demo
+- `Examples/Pic_nepal_GP_ST/`: figures and results for the spatio-temporal Gaussian demo
+- `Examples/Pic_nepal_MSP/`: figures and results for the Brown–Resnick max-stable demo
 
 ## 2. Installation
 
@@ -29,19 +29,24 @@ To help users prepare a reproducible runtime environment, we provide the script:
 
 - `reproduce_prepare.R`
 
-This script was used to test the code on a fresh Windows machine. It is included as a reference for environment setup, rather than as a one-click installation script for all users.
+This script creates and configures the required R and Python environment in one run. Run it from the repository root:
+
+```bash
+Rscript reproduce_prepare.R
+```
+
+If prompted to install R packages from source, select `no` to use binary packages. The equivalent setup steps are shown below for reference.
 
 Because users may have different local machine settings, such as different R versions or missing system tools, the commands below may need to be adapted to the local system configuration. In particular, some components may require manual setup, such as:
 
-- Git
-- Rtools
+- C/C++ build tools, such as Rtools on Windows
 
 The examples have been tested using:
 
-- **Python 3.11**
-- **TensorFlow 2.19.0**
-- **Keras 2.15.0**
-- **TensorFlow Probability 0.15.1**
+- **Python 3.12**
+- **TensorFlow 2.18.0**
+- **tf-keras 2.18.0**
+- **TensorFlow Probability 0.25.0**
 - **R ≥ 4.2**
 
 Required R packages include:
@@ -69,40 +74,33 @@ Required R packages include:
 install.packages("reticulate")
 library(reticulate)
 
-py_version <- "3.11:latest"
+py_version <- "3.12:latest"
+envname <- file.path(getwd(), "deepspat_venv")
 path_to_python <- reticulate::install_python(version = py_version)
 
 reticulate::virtualenv_create(
-  envname = "deepspat_examples",
+  envname = envname,
   python = path_to_python,
   version = py_version
 )
 ```
 
-### Step 2. Restart the R session and install TensorFlow-related Python packages
+### Step 2. Install TensorFlow-related Python packages
 
-After creating the virtual environment, **restart the R session**. Then run:
+After creating the virtual environment, run:
 
 ```r
 library(reticulate)
-reticulate::use_virtualenv("deepspat_examples", required = TRUE)
-
-tensorflow::install_tensorflow(
-  method = "virtualenv",
-  envname = "deepspat_examples",
-  version = "2.19.0"
-)
-
-keras::install_keras(
-  method = "virtualenv",
-  envname = "deepspat_examples",
-  version = "2.15.0"
-)
+reticulate::use_virtualenv(envname, required = TRUE)
 
 reticulate::virtualenv_install(
-  envname = "deepspat_examples",
-  packages = "tensorflow-probability",
-  version = "0.15.1"
+  envname = envname,
+  packages = c(
+    "tensorflow==2.18.0",
+    "tensorflow-probability==0.25.0",
+    "tf-keras==2.18.0",
+    "scipy"
+  )
 )
 ```
 
@@ -110,25 +108,38 @@ reticulate::virtualenv_install(
 
 ```r
 install.packages(c(
+  "deepspat",
   "reticulate",
   "tensorflow",
   "keras",
   "tfprobability",
   "dplyr",
   "ggplot2",
+  "ggnewscale",
+  "elevatr",
+  "RColorBrewer",
   "patchwork",
   "fields",
   "gstat",
   "GpGp",
+  "cocons",
+  "ggmap",
+  "verification",
+  "FNN",
+  "devtools",
+  "scales",
   "sp",
   "viridis",
   "gridExtra",
   "ggpubr",
   "this.path"
 ))
-```
 
-If `deepspat` is not already installed, install it from its source repository or from the location specified by the project maintainers.
+install.packages(
+  "contoureR",
+  repos = c("https://cran.r-universe.dev", "https://cloud.r-project.org")
+)
+```
 
 ### Step 4. Check that the installation works
 
@@ -138,48 +149,44 @@ After the environment is set up, run:
 library(reticulate)
 library(tensorflow)
 
-reticulate::use_virtualenv("deepspat_examples", required = TRUE)
+reticulate::use_virtualenv(file.path(getwd(), "deepspat_venv"), required = TRUE)
 
 py_config()
 tf$constant("TensorFlow is available")
 ```
 
-If these commands run without error, the environment is ready.
+If these commands run without error, the environment is ready. The Python path shown by `py_config()` should point to `deepspat_venv`.
 
 ## 3. How to run
 
 From the repository root:
 
-```bash
-cd Examples
-```
-
 ### Spatio-temporal Gaussian demo
 
-This demo writes results to `Pic_nepal_GP_ST/`.
+This demo writes results to `Examples/Pic_nepal_GP_ST/`.
 
 ```bash
-Rscript app_model_GP_ST.R
-Rscript app_results_GP_ST.R
+Rscript Examples/app_model_GP_ST.R
+Rscript Examples/app_results_GP_ST.R
 ```
 
 ### Max-stable Brown–Resnick demo
 
-This demo writes results to `Pic_nepal_MSP/`.
+This demo writes results to `Examples/Pic_nepal_MSP/`.
 
 ```bash
-Rscript app_model_MSP.R
-Rscript app_results_MSP.R
+Rscript Examples/app_model_MSP.R
+Rscript Examples/app_results_MSP.R
 ```
 
 ### Optional simulations
 
 ```bash
-Rscript sims_1.R
-Rscript results_sims_1.R
+Rscript Examples/sims_1.R
+Rscript Examples/results_sims_1.R
 
-Rscript sims_2.R
-Rscript results_sims_2.R
+Rscript Examples/sims_2.R
+Rscript Examples/results_sims_2.R
 ```
 
 Alternatively, run all examples directly with:

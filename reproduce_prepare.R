@@ -1,101 +1,109 @@
 ################################################################################
-# Python environment setup
-install.packages("reticulate")
+# Create and configure the project-local Python environment.
+# `deepspat_venv` is created alongside `reproduce_prepare.R`.
+# If prompted to install packages from source, select "no" to use binary packages.
+install.packages(c("reticulate", "this.path"))
 library(reticulate)
 
-py_version <- "3.11:latest"
+project_path <- this.path::this.dir()
+py_version <- "3.12:latest"
+envname <- file.path(project_path, "deepspat_venv")
 path_to_python <- reticulate::install_python(version = py_version)
 
-# Git installation:
-# https://git-scm.com/install/windows
-# During installation, choose:
-# "Git from the command line and also from 3rd-party software"
-# so that Git is automatically added to your system PATH.
-
 reticulate::virtualenv_create(
-  envname = "dcsmext",
+  envname = envname,
   python = path_to_python,
   version = py_version
 )
 
-# Restart the R session before continuing.
-reticulate::use_virtualenv("dcsmext", required = TRUE)
-
-tensorflow::install_tensorflow(
-  method = "virtualenv",
-  envname = "dcsmext",
-  version = "2.19.0"
-)
-
-keras::install_keras(
-  method = "virtualenv",
-  envname = "dcsmext",
-  version = "2.15.0"
-)
+reticulate::use_virtualenv(envname, required = TRUE)
 
 reticulate::virtualenv_install(
-  envname = "dcsmext",
-  packages = "tensorflow-probability",
-  version = "0.15.1"
+  envname = envname,
+  packages = c(
+    "tensorflow==2.18.0",
+    "tensorflow-probability==0.25.0",
+    "tf-keras==2.18.0",
+    "scipy"
+  )
 )
 
+# The Python path shown below should point to `deepspat_venv`.
+reticulate::py_config()
+
 ################################################################################
-# Install required R packages
+# Install `deepspat` and the R packages required by it.
 install.packages(c(
+  "deepspat",
   "reticulate",
   "tensorflow",
   "keras",
   "tfprobability",
   "dplyr",
-  "fields",
-  "ggplot2",
-  "ggpubr",
-  "ggnewscale",
-  "elevatr",
-  "RColorBrewer",
-  "this.path",
-  "gridExtra",
-  "viridis"
+  "fields"
 ))
 
+# Load `deepspat` and the R packages required by it.
+library(deepspat)
 library(tensorflow)
 library(keras)
 library(tfprobability)
 library(dplyr)
 library(fields)
+
+
+# Install additional R packages required by the example scripts.
+install.packages(c(
+  "ggplot2",
+  "ggpubr",
+  "ggnewscale",
+  "elevatr",
+  "RColorBrewer",
+  "gridExtra",
+  "viridis",
+  "cocons",
+  "ggmap",
+  "GpGp",
+  "gstat",
+  "verification",
+  "FNN",
+  "devtools",
+  "patchwork",
+  "scales",
+  "sp"
+))
+
+# Load additional R packages required by the example scripts.
 library(ggplot2)
 library(ggpubr)
 library(ggnewscale)
 library(elevatr)
 library(RColorBrewer)
-library(this.path)
 library(gridExtra)
 library(viridis)
+library(cocons)
+library(ggmap)
+library(GpGp)
+library(gstat)
+library(verification)
+library(FNN)
+library(devtools)
+library(patchwork)
+library(scales)
+library(sp)
 
 ################################################################################
-# The packages `maps` and `contoureR` are only needed for reproducing
-# the plots in the UK precipitation data application.
-# If you do not need to reproduce those figures, you can skip this section.
+# Install additional packages required by the application examples.
 
-install.packages("maps")
-install.packages("contoureR")
-
-# Note:
-# `contoureR` is mainly available for older R versions (for example, R 4.3.2).
-# If you are using a newer version of R (for example, R 4.5.x),
-# the package may need to be installed from source via CRAN.
-# In that case, Rtools is usually required on Windows to compile the package.
-
-# For newer R versions (here, the results were reproduced using R 4.5.3),
-# you can install Rtools from:
-# https://cran.r-project.org/bin/windows/Rtools/rtools45/rtools.html
-
-# To verify that Rtools has been installed correctly, run:
+# `contoureR` is archived on CRAN and may need to be built from source.
+# Check that the required build tools are available.
 Sys.which("make")
 Sys.which("g++")
 
+# Install `contoureR` from R-universe.
 install.packages(
   "contoureR",
   repos = c("https://cran.r-universe.dev", "https://cloud.r-project.org")
 )
+
 library(contoureR)
