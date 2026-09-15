@@ -1,5 +1,26 @@
 # Auxiliary functions for extremes
-library(SpatialExtremes)
+
+# Empirical F-madogram calculation adapted from SpatialExtremes::fmadogram().
+# Source: https://github.com/cran/SpatialExtremes/blob/master/R/madogram.R
+# SpatialExtremes is licensed under GPL (>= 2).
+fmadogram = function(data, coord) {
+  if (is.null(dim(coord))) {
+    if (length(coord) != ncol(data))
+      stop("'data' and 'coord' don't match")
+  } else if (nrow(coord) != ncol(data))
+    stop("'data' and 'coord' don't match")
+
+  data = t(t(apply(data, 2, rank, na.last = "keep")) /
+             (colSums(is.finite(data)) + 1))
+  pairs = combn(ncol(data), 2)
+  dist = as.vector(stats::dist(as.matrix(coord)))
+  fmado = apply(pairs, 2, function(idx) {
+    mean(abs(data[, idx[1]] - data[, idx[2]]), na.rm = TRUE) / 2
+  })
+  ext.coeff = (1 + 2 * fmado) / (1 - 2 * fmado)
+
+  invisible(cbind(dist = dist, madogram = fmado, ext.coeff = ext.coeff))
+}
 
 # rexceed = function(data, risk_fun) {
 #   func_risk = apply(data, 2, risk_fun)

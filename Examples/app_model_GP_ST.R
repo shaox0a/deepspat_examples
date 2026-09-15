@@ -7,13 +7,14 @@
 ############################################################
 
 rm(list = ls())
-examples_path <- NULL
+examples_path <- file.path(this.path::this.dir(), "..")
 # Specify the path to the deepspat examples directory.
-deepspat_path <- NULL
+deepspat_path <- "../deepspat-master"
 # Set `deepspat_path` to a local package path, or NULL to use library(deepspat).
 if (!is.null(examples_path)) {
   setwd(examples_path)
 }
+reticulate::use_virtualenv(file.path(examples_path, "deepspat_venv"), required = TRUE)
 
 message("Currently running: Fitting the models for case study with Nepal mean temperature")
 

@@ -5,7 +5,7 @@
 ############################################################
 
 rm(list = ls())
-examples_path <- NULL
+examples_path <- file.path(this.path::this.dir(), "..")
 # Specify the path to the deepspat examples directory.
 if (!is.null(examples_path)) {
   setwd(examples_path)

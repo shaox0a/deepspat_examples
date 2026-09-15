@@ -1,7 +1,6 @@
 required_packages <- c(
   "FNN",
   "RColorBrewer",
-  "SpatialExtremes",
   "cocons",
   "contoureR",
   "deepspat",
@@ -23,6 +22,7 @@ required_packages <- c(
   "sp",
   "tensorflow",
   "tfprobability",
+  "this.path",
   "verification",
   "viridis"
 )

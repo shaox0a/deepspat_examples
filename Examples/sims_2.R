@@ -1,10 +1,11 @@
-examples_path <- NULL
+examples_path <- file.path(this.path::this.dir(), "..")
 # Specify the path to the deepspat examples directory.
-deepspat_path <- NULL
+deepspat_path <- "../deepspat-master"
 # Set `deepspat_path` to a local package path, or NULL to use library(deepspat).
 if (!is.null(examples_path)) {
   setwd(examples_path)
 }
+reticulate::use_virtualenv(file.path(examples_path, "deepspat_venv"), required = TRUE)
 
 if (is.null(deepspat_path)) {
   library(deepspat)
@@ -42,7 +43,8 @@ CRPS <- function(true, pred, pred_var){
 
 holes_all <- data.frame(rbind(holes$training, holes$test))
 
-RNGkind(sample.kind = "Rounding")
+# Use the legacy sampler to reproduce the results reported in the paper.
+suppressWarnings(RNGkind(sample.kind = "Rounding"))
 set.seed(1)
 holes_train <- holes_all[sample(1:nrow(holes_all), 1500),]
 holes_test <- setdiff(holes_all, holes_train)
@@ -92,7 +94,7 @@ sp_data <- data.frame(x = holes_train$x,
 coordinates(sp_data) <- ~ x + y
 
 # Fit variogram
-vgm_exp <- variogram(z ~ 1, data = sp_data)
+vgm_exp <- gstat::variogram(z ~ 1, data = sp_data)
 vgm_model <- vgm(model = "Exp", nugget = 0.1)
 vgm_fit <- fit.variogram(vgm_exp, model = vgm_model)
 
