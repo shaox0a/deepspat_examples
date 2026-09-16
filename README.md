@@ -29,10 +29,10 @@ To help users prepare a reproducible runtime environment, we provide the script:
 
 - `reproduce_prepare.R`
 
-This script creates and configures the required R and Python environment in one run. Run it from the repository root:
+`run_all.R` checks the required R and Python dependencies and sources this script automatically when setup is required. To prepare the environment and run all examples, run the following command from the repository root:
 
 ```bash
-Rscript reproduce_prepare.R
+Rscript run_all.R
 ```
 
 If prompted to install R packages from source, select `no` to use binary packages. The equivalent setup steps are shown below for reference.
@@ -161,6 +161,12 @@ If these commands run without error, the environment is ready. The Python path s
 
 From the repository root:
 
+```bash
+Rscript run_all.R
+```
+
+Individual examples can also be run as follows.
+
 ### Spatio-temporal Gaussian demo
 
 This demo writes results to `Examples/Pic_nepal_GP_ST/`.
@@ -187,12 +193,6 @@ Rscript Examples/results_sims_1.R
 
 Rscript Examples/sims_2.R
 Rscript Examples/results_sims_2.R
-```
-
-Alternatively, run all examples directly with:
-
-```bash
-Rscript run_all.R
 ```
 
 ## 4. Background

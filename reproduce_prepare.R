@@ -43,15 +43,6 @@ install.packages(c(
   "fields"
 ))
 
-# Load `deepspat` and the R packages required by it.
-library(deepspat)
-library(tensorflow)
-library(keras)
-library(tfprobability)
-library(dplyr)
-library(fields)
-
-
 # Install additional R packages required by the example scripts.
 install.packages(c(
   "ggplot2",
@@ -73,25 +64,6 @@ install.packages(c(
   "sp"
 ))
 
-# Load additional R packages required by the example scripts.
-library(ggplot2)
-library(ggpubr)
-library(ggnewscale)
-library(elevatr)
-library(RColorBrewer)
-library(gridExtra)
-library(viridis)
-library(cocons)
-library(ggmap)
-library(GpGp)
-library(gstat)
-library(verification)
-library(FNN)
-library(devtools)
-library(patchwork)
-library(scales)
-library(sp)
-
 ################################################################################
 # Install additional packages required by the application examples.
 
@@ -105,5 +77,3 @@ install.packages(
   "contoureR",
   repos = c("https://cran.r-universe.dev", "https://cloud.r-project.org")
 )
-
-library(contoureR)
