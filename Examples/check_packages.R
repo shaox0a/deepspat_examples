@@ -62,4 +62,3 @@ if (length(missing_packages) > 0) {
 } else {
   cat("\nAll required packages are installed! ✓\n")
 }
-
