@@ -4,11 +4,11 @@
 
 #########################
 
-envname <- file.path(getwd(), "deepspat_venv")
-if (!dir.exists(envname)) source("reproduce_prepare.R")
-
 examples_path <- this.path::this.dir()
 setwd(examples_path)
+
+envname <- file.path(examples_path, "deepspat_venv")
+if (!dir.exists(envname)) source(file.path(examples_path, "reproduce_prepare.R"))
 
 ####### Use the Python environment created by reproduce_prepare.R #########
 library(reticulate)
