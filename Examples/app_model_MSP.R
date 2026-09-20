@@ -9,8 +9,6 @@ rm(list = ls())
 examples_path <- file.path(this.path::this.dir(), "..")
 # Specify the path to the deepspat examples directory.
 
-deepspat_path <- "../deepspat-master"
-# Set `deepspat_path` to a local package path, or NULL to use library(deepspat).
 
 if (!is.null(examples_path)) {
   setwd(examples_path)
@@ -22,14 +20,13 @@ message("Currently running: Fitting the models for case study with Nepal maximum
 ###############################################
 # Load core modelling libraries
 ###############################################
-if (is.null(deepspat_path)) {
-  library(deepspat)
-} else {
-  pkgload::load_all(
-    deepspat_path,
-    quiet = TRUE
-  )
-}
+# library(deepspat)
+
+deepspat_path <- "../deepspat-master"
+pkgload::load_all(
+  deepspat_path,
+  quiet = TRUE
+)
 library(tensorflow)    # Backend for deepspat
 library(keras)
 library(tfprobability)
@@ -100,7 +97,7 @@ obs_loc <- df.obs[, c("s1", "s2")]   # Subsampled locations
 obs_data <- df.obs[, 3:ncol(df.obs)] # Subsampled maxima
 
 # Quick visual sanity check of subsampled locations
-plot(obs_loc)
+if (interactive()) try(plot(obs_loc), silent = TRUE)
 
 # Combined locations + data for deepspat_MSP
 obs_all <- cbind(obs_loc, obs_data) %>% as.data.frame()
@@ -204,9 +201,13 @@ Sigma_psi <- pred$Sigma.psi
 # Examples of the new S3 plot methods
 # These are quick checks only and are not saved.
 ###############################################
-plot(d1, type = "space", pred = pred)
-plot(d1, type = "dependence", pred = pred)
-plot(d1, type = "uncertainty", pred = pred)
+if (interactive()) {
+  try({
+    plot(d1, type = "space", pred = pred)
+    plot(d1, type = "dependence", pred = pred)
+    plot(d1, type = "uncertainty", pred = pred)
+  }, silent = TRUE)
+}
 
 
 ###############################################

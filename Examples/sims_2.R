@@ -1,20 +1,18 @@
 examples_path <- file.path(this.path::this.dir(), "..")
 # Specify the path to the deepspat examples directory.
-deepspat_path <- "../deepspat-master"
-# Set `deepspat_path` to a local package path, or NULL to use library(deepspat).
+
 if (!is.null(examples_path)) {
   setwd(examples_path)
 }
 reticulate::use_virtualenv(file.path(examples_path, "deepspat_venv"), required = TRUE)
 
-if (is.null(deepspat_path)) {
-  library(deepspat)
-} else {
-  pkgload::load_all(
-    deepspat_path,
-    quiet = TRUE
-  )
-}
+library(deepspat)
+
+# deepspat_path <- "../deepspat-master"
+# pkgload::load_all(
+#   deepspat_path,
+#   quiet = TRUE
+# )
 library(GpGp)
 library(tensorflow)
 library(keras)
@@ -142,12 +140,16 @@ crps_gp <- CRPS(holes_test$z, pred_gp$df_pred$pred_mean, pred_gp$df_pred$pred_va
 plot_data_gp <- holes_test[seq_len(min(500L, nrow(holes_test))), ]
 pred_cov_gp <- predict(d_gp, plot_data_gp, type = "covariance",
                        reference = 1L)
-plot(d_gp, type = "space", pred = predall_gp)
-plot(d_gp, type = "prediction", pred = pred_gp)
-plot(d_gp, type = "covariance", pred = pred_cov_gp,
-     value = "correlation")
-plot(d_gp, type = "covariance", pred = pred_cov_gp,
-     value = "covariance")
+if (interactive()) {
+  try({
+    plot(d_gp, type = "space", pred = predall_gp)
+    plot(d_gp, type = "prediction", pred = pred_gp)
+    plot(d_gp, type = "covariance", pred = pred_cov_gp,
+         value = "correlation")
+    plot(d_gp, type = "covariance", pred = pred_cov_gp,
+         value = "covariance")
+  }, silent = TRUE)
+}
 
 ## nngp model
 # Set up order and neighbor
@@ -198,12 +200,16 @@ crps_nngp <- CRPS(holes_test$z, pred_nngp$df_pred$pred_mean, pred_nngp$df_pred$p
 
 pred_cov_nngp <- predict(d_nngp, plot_data_gp, type = "covariance",
                          reference = 1L)
-plot(d_nngp, type = "space", pred = predall_nngp)
-plot(d_nngp, type = "prediction", pred = pred_nngp)
-plot(d_nngp, type = "covariance", pred = pred_cov_nngp,
-     value = "correlation")
-plot(d_nngp, type = "covariance", pred = pred_cov_nngp,
-     value = "covariance")
+if (interactive()) {
+  try({
+    plot(d_nngp, type = "space", pred = predall_nngp)
+    plot(d_nngp, type = "prediction", pred = pred_nngp)
+    plot(d_nngp, type = "covariance", pred = pred_cov_nngp,
+         value = "correlation")
+    plot(d_nngp, type = "covariance", pred = pred_cov_nngp,
+         value = "covariance")
+  }, silent = TRUE)
+}
 
 ## frk model
 layers <- c(layers_gp,

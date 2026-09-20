@@ -258,8 +258,8 @@ plot_corr1 <- ggplot(data = newdata_year[1:1419+(year-2004)*1419,]) +
     labels = c("0.00", "0.25", "0.50", "0.75", "1.00")
   ) +
   geom_point(
-    aes(x = newdata_year$s1[ref.point1],
-        y = newdata_year$s2[ref.point1]),
+    data = newdata_year[ref.point1, ],
+    aes(x = s1, y = s2),
     size = 2, shape = ref_shap, fill = "red", color = "black"
   ) +
   theme_bw() + coord_fixed() +
@@ -314,8 +314,8 @@ plot_corr2 <- ggplot(data = newdata_year[1:1419+(year-2004)*1419,]) +
     labels = c("0.00", "0.25", "0.50", "0.75", "1.00")
   ) +
   geom_point(
-    aes(x = newdata_year$s1[ref.point2],
-        y = newdata_year$s2[ref.point2]),
+    data = newdata_year[ref.point2, ],
+    aes(x = s1, y = s2),
     size = 2, shape = ref_shap, fill = "red", color = "black"
   ) +
   theme_bw() + coord_fixed() +

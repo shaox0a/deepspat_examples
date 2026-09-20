@@ -9,8 +9,7 @@
 rm(list = ls())
 examples_path <- file.path(this.path::this.dir(), "..")
 # Specify the path to the deepspat examples directory.
-deepspat_path <- "../deepspat-master"
-# Set `deepspat_path` to a local package path, or NULL to use library(deepspat).
+
 if (!is.null(examples_path)) {
   setwd(examples_path)
 }
@@ -21,14 +20,13 @@ message("Currently running: Fitting the models for case study with Nepal mean te
 # -------------------------------------------------------------------
 # Packages
 # -------------------------------------------------------------------
-if (is.null(deepspat_path)) {
-  library(deepspat)
-} else {
-  pkgload::load_all(
-    deepspat_path,
-    quiet = TRUE
-  )
-}
+library(deepspat)
+
+# deepspat_path <- "../deepspat-master"
+# pkgload::load_all(
+#   deepspat_path,
+#   quiet = TRUE
+# )
 library(tensorflow)
 library(tfprobability)
 library(keras)
@@ -527,12 +525,16 @@ if (fit_d3) {
   # and are not saved.
   pred_cov_year_ref1 <- predict(d3, dataset_year, type = "covariance",
                                 reference = ref.pts[1L])
-  plot(d3, type = "space", pred = pred_process_year)
-  plot(d3, type = "prediction", pred = pred_process_year)
-  plot(d3, type = "covariance", pred = pred_cov_year_ref1,
-       value = "correlation")
-  plot(d3, type = "covariance", pred = pred_cov_year_ref1,
-       value = "covariance")
+  if (interactive()) {
+    try({
+      plot(d3, type = "space", pred = pred_process_year)
+      plot(d3, type = "prediction", pred = pred_process_year)
+      plot(d3, type = "covariance", pred = pred_cov_year_ref1,
+           value = "correlation")
+      plot(d3, type = "covariance", pred = pred_cov_year_ref1,
+           value = "covariance")
+    }, silent = TRUE)
+  }
   
   # -----------------------------
   # 4) Correlation vectors for the two reference sites
