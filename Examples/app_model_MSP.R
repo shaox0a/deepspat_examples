@@ -20,13 +20,13 @@ message("Currently running: Fitting the models for case study with Nepal maximum
 ###############################################
 # Load core modelling libraries
 ###############################################
-# library(deepspat)
+library(deepspat)
 
-deepspat_path <- "../deepspat-master"
-pkgload::load_all(
-  deepspat_path,
-  quiet = TRUE
-)
+# deepspat_path <- "../deepspat-master"
+# pkgload::load_all(
+#   deepspat_path,
+#   quiet = TRUE
+# )
 library(tensorflow)    # Backend for deepspat
 library(keras)
 library(tfprobability)
