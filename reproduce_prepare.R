@@ -2,13 +2,18 @@
 # Create and configure the project-local Python environment.
 # `deepspat_venv` is created alongside `reproduce_prepare.R`.
 # If prompted to install packages from source, select "no" to use binary packages.
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
 install.packages(c("reticulate", "this.path"))
 library(reticulate)
 
 project_path <- this.path::this.dir()
 py_version <- "3.12:latest"
 envname <- file.path(project_path, "deepspat_venv")
-path_to_python <- reticulate::install_python(version = py_version)
+path_to_python <- reticulate::virtualenv_starter("3.12")
+if (is.null(path_to_python)) {
+  path_to_python <- reticulate::install_python(version = py_version)
+}
 
 reticulate::virtualenv_create(
   envname = envname,
@@ -33,8 +38,16 @@ reticulate::py_config()
 
 ################################################################################
 # Install `deepspat` and the R packages required by it.
+# Install from source because CRAN binaries for older R versions may be outdated.
+if (!("deepspat" %in% rownames(installed.packages()))) {
+  install.packages("deepspat", type = "source")
+} else if (packageVersion("deepspat") < package_version("0.3.5")) {
+  message("The installed deepspat version is outdated; updating to version 0.3.5 or later.")
+  install.packages("deepspat", type = "source")
+}
+stopifnot(packageVersion("deepspat") >= package_version("0.3.5"))
+
 install.packages(c(
-  "deepspat",
   "reticulate",
   "tensorflow",
   "keras",
@@ -48,7 +61,6 @@ install.packages(c(
   "ggplot2",
   "ggpubr",
   "ggnewscale",
-  "elevatr",
   "RColorBrewer",
   "gridExtra",
   "viridis",
@@ -64,16 +76,3 @@ install.packages(c(
   "sp"
 ))
 
-################################################################################
-# Install additional packages required by the application examples.
-
-# `contoureR` is archived on CRAN and may need to be built from source.
-# Check that the required build tools are available.
-Sys.which("make")
-Sys.which("g++")
-
-# Install `contoureR` from R-universe.
-install.packages(
-  "contoureR",
-  repos = c("https://cran.r-universe.dev", "https://cloud.r-project.org")
-)

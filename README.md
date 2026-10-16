@@ -16,12 +16,35 @@ The folder `Examples/` contains:
 - `app_results_MSP.R`: result processing and plotting for the max-stable example
 - `sims_1.R`, `results_sims_1.R`: optional simulation workflow 1
 - `sims_2.R`, `results_sims_2.R`: optional simulation workflow 2
+- `check_packages.R`: checks that the R packages required by the examples are installed
+- `contour_extract.R`: optional reference script used to generate the supplied
+  elevation and contour data; it is not run by the normal reproduction workflow
 - `run_all.R` (repository root): optional script for running all examples directly
 
 The output folders are:
 
 - `Examples/Pic_nepal_GP_ST/`: figures and results for the spatio-temporal Gaussian demo
 - `Examples/Pic_nepal_MSP/`: figures and results for the Brown–Resnick max-stable demo
+
+The folder `Examples/Data/` contains the data supplied with the repository:
+
+- `NepalExtended.RData` contains `S`, a 1,419 × 2 matrix of spatial
+  coordinates, and `Z.max`, a 1,419 × 192 matrix of block-maxima observations
+  used by the Brown–Resnick max-stable application. The rows of `Z.max`
+  correspond to the locations in `S`.
+- `NepalExtended_mean.RData` contains `dataset`, with 22,704 observations at
+  1,419 locations for 2004–2019. Its columns are `year`, spatial coordinates
+  `s1` and `s2`, elevation `elev`, and the mean-temperature response `Y_mean`.
+  It is used by the spatio-temporal Gaussian application.
+- `NepalMap.RData` contains `nepal`, the terrain-map raster used as the
+  background map in the Nepal application figures.
+- `Nepal_contour.RData` contains the MSP elevation data `df_elev_MSP` and the
+  precomputed contour vertices `df_contour_GP_ST` and `df_contour_MSP`. The
+  elevation data contain coordinates `s1` and `s2` and elevation `elev`; the
+  contour objects contain identifiers, coordinates `x` and `y`, and elevation
+  level `z`. These data are used only for application figures and do not need
+  to be regenerated for the normal reproduction workflow. See
+  `Examples/contour_extract.R` for generation details.
 
 ## 2. Installation
 
@@ -76,7 +99,10 @@ library(reticulate)
 
 py_version <- "3.12:latest"
 envname <- file.path(getwd(), "deepspat_venv")
-path_to_python <- reticulate::install_python(version = py_version)
+path_to_python <- reticulate::virtualenv_starter("3.12")
+if (is.null(path_to_python)) {
+  path_to_python <- reticulate::install_python(version = py_version)
+}
 
 reticulate::virtualenv_create(
   envname = envname,
@@ -84,6 +110,8 @@ reticulate::virtualenv_create(
   version = py_version
 )
 ```
+
+The setup reuses an existing Python 3.12 installation when available and only installs Python when none is found. Avoid forcing `install_python()`, as this may overwrite an existing reticulate-managed Python installation.
 
 ### Step 2. Install TensorFlow-related Python packages
 
@@ -107,8 +135,11 @@ reticulate::virtualenv_install(
 ### Step 3. Install the required R packages
 
 ```r
+# Install from source because CRAN binaries for older R versions may be outdated.
+install.packages("deepspat", type = "source")
+stopifnot(packageVersion("deepspat") >= package_version("0.3.5"))
+
 install.packages(c(
-  "deepspat",
   "reticulate",
   "tensorflow",
   "keras",
@@ -116,7 +147,6 @@ install.packages(c(
   "dplyr",
   "ggplot2",
   "ggnewscale",
-  "elevatr",
   "RColorBrewer",
   "patchwork",
   "fields",
@@ -135,10 +165,6 @@ install.packages(c(
   "this.path"
 ))
 
-install.packages(
-  "contoureR",
-  repos = c("https://cran.r-universe.dev", "https://cloud.r-project.org")
-)
 ```
 
 ### Step 4. Check that the installation works
