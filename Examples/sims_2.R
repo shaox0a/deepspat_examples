@@ -64,7 +64,12 @@ coco_object <- coco ( type = "dense",
                       z = holes_train$z,
                       data = holes_train)
 
-coco_object <- cocoOptim (coco_object, ncores = "auto")
+# Set optimization bounds explicitly for reproducibility across cocons versions.
+coco_object <- cocoOptim(
+  coco_object,
+  boundaries = getBoundaries(coco_object, -2, 2),
+  ncores = "auto"
+)
 
 pred_cocons <- cocoPredict (coco_object,
                             newdataset = holes_test,

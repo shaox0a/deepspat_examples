@@ -241,7 +241,7 @@ for (i in 1:m){
 # NOTE: The plotting script assumes that d3 has been fitted,
 #       so keep model_choice = "d3" or "all" for now.
 
-model_choice <- "d3"
+model_choice <- "all"
 
 fit_d1 <- fit_d2 <- fit_d3 <- fit_d4 <- FALSE
 
@@ -437,8 +437,9 @@ if (fit_d3) {
   # -----------------------------
   # 1) Warped elevation contours
   # -----------------------------
-  df_elev <- data.frame(dataset) %>% distinct(s1, s2, elev)
-  df_contour0 <- contoureR::getContourLines(df_elev, nlevels = 4)
+  # Load the contours extracted separately by `Examples/contour_extract.R`.
+  load("Examples/Data/Nepal_contour.RData")
+  df_contour0 <- df_contour_GP_ST
   
   newdata_contour <- data.frame(
     s1   = df_contour0$x,

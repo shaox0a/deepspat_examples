@@ -2,11 +2,9 @@ required_packages <- c(
   "FNN",
   "RColorBrewer",
   "cocons",
-  "contoureR",
   "deepspat",
   "devtools",
   "dplyr",
-  "elevatr",
   "fields",
   "ggmap",
   "ggnewscale",
@@ -61,4 +59,9 @@ if (length(missing_packages) > 0) {
   )
 } else {
   cat("\nAll required packages are installed! ✓\n")
+}
+
+# Reject outdated CRAN binaries that are incompatible with these examples.
+if (packageVersion("deepspat") < package_version("0.3.5")) {
+  stop("deepspat version 0.3.5 or later is required.")
 }

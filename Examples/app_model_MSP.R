@@ -33,10 +33,6 @@ library(tfprobability)
 library(dplyr)
 library(fields)        # rdist for pairwise distances
 
-# For elevation contours that will later be warped
-library(elevatr)       # Elevation data
-library(contoureR)     # Contour extraction from scattered elevation data
-
 # Custom helper functions: edm_est, extcoef, grad_extcoef, fmadogram, etc.
 source("Examples/utils_ext.R")
 
@@ -211,26 +207,16 @@ if (interactive()) {
 
 
 ###############################################
-# Precompute elevation contours and their warping
+# Load elevation data and contours and compute the contour warping
 ###############################################
-# This block reproduces the elevation-based contours that are later used
-# in the plotting script, BUT also applies the warping f(s) to each
+# This block loads the supplied contours and applies the warping f(s) to each
 # contour vertex using `predict(d1, ..., type = "warp")`.
 
-# Elevation extraction (EPSG:4326) at original locations S
-elev_extract <- elevatr::get_elev_point(
-  data.frame(x = S[, 1], y = S[, 2]),
-  prj = 4326, src = "aws"
-)
-elev <- elev_extract$elevation
-elev[is.na(elev)] <- 0  # Fallback for missing values
-
-# Elevation field on the grid
-df_elev <- data.frame(s1 = S[, 1], s2 = S[, 2], elev = elev)
-
-# Extract contour lines (original space)
-df_contour <- contoureR::getContourLines(df_elev, nlevels = 4)
-# Columns are typically: x, y (coordinates), z (elevation), Group, level, etc.
+# Load the elevation data and contours created by `Examples/contour_extract.R`.
+load("Examples/Data/Nepal_contour.RData")
+df_elev <- df_elev_MSP
+elev <- df_elev$elev
+df_contour <- df_contour_MSP
 
 # Warp contour vertices into warped space using f(s)
 cont_warped <- predict(

@@ -43,12 +43,7 @@ app_data <- "NepalExtended"
 
 
 ###############################################
-# Load map-related objects (NepalMap.RData)
-# Typically contains:
-#  - S: locations
-#  - df: grid df with "s1","s2","elev" for the background tile
-#  - df_loc: locations in data frame form
-#  - nepal: ggmap base map object
+# Load the background map from NepalMap.RData.
 ###############################################
 load("Examples/Data/NepalMap.RData")
 
@@ -71,7 +66,7 @@ Sigma.psi    <- fit_results$Sigma_psi
 
 # Elevation / contour information
 df_elev         <- fit_results$df_elev
-df_contour      <- fit_results$df_contour     # includes x,y,z,Group,level,xw,yw
+df_contour      <- fit_results$df_contour     # includes x,y,z,Group,xw,yw
 df_verti_warped <- fit_results$df_verti_warped
 df_horiz_warped <- fit_results$df_horiz_warped
 ref.pts         <- fit_results$ref_pts
@@ -98,8 +93,12 @@ if (!dir.exists(pic_path)) {
 ###############################################
 # Quick checks of site ordering and reference points
 ###############################################
-plot(S)                           # All grid locations
-points(S[c(348, 363), ], col = "red")  # Just a sanity check; not used later
+if (interactive()) {
+  try({
+    plot(S)                           # All grid locations
+    points(S[c(348, 363), ], col = "red")  # Just a sanity check; not used later
+  }, silent = TRUE)
+}
 
 
 ###############################################
@@ -112,15 +111,15 @@ points(S[c(348, 363), ], col = "red")  # Just a sanity check; not used later
 D.warped <- rdist(S.warped)
 
 # Optional visual check of warped coordinates
-plot(S.warped)
+if (interactive()) try(plot(S.warped), silent = TRUE)
 
 
 ###############################################
 # Elevation contours (original and warped space)
 # We do NOT recompute elevation or contours here.
-# Instead, we use df_contour from the model script, which already
-# contains:
-#  - x, y, z, Group, level    (original-space contour vertices)
+# Instead, we use df_elev and df_contour from the model script. The latter
+# already contains:
+#  - x, y, z, Group           (original-space contour vertices)
 #  - xw, yw                   (warped-space contour vertices)
 ###############################################
 # Example structure check:
@@ -181,7 +180,7 @@ p.elev <- ggmap(nepal) +  # 'nepal' comes from NepalMap.RData
   ) +
   xlab("Longitude") + ylab("Latitude") +
   scale_fill_gradientn("Elevation (m)", colours = terrain.colors(10))
-print(p.elev)
+if (interactive()) try(print(p.elev), silent = TRUE)
 
 ggsave(
   paste0(pic_path, "nepal_elev.pdf"),
