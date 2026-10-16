@@ -38,7 +38,7 @@ The folder `Examples/Data/` contains the data supplied with the repository:
   It is used by the spatio-temporal Gaussian application.
 - `NepalMap.RData` contains `nepal`, the terrain-map raster used as the
   background map in the Nepal application figures.
-- `Nepal_contour.RData` contains the MSP elevation data `df_elev_MSP` and the
+- `NepalContour.RData` contains the MSP elevation data `df_elev_MSP` and the
   precomputed contour vertices `df_contour_GP_ST` and `df_contour_MSP`. The
   elevation data contain coordinates `s1` and `s2` and elevation `elev`; the
   contour objects contain identifiers, coordinates `x` and `y`, and elevation
