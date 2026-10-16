@@ -213,7 +213,7 @@ if (interactive()) {
 # contour vertex using `predict(d1, ..., type = "warp")`.
 
 # Load the elevation data and contours created by `Examples/contour_extract.R`.
-load("Examples/Data/Nepal_contour.RData")
+load("Examples/Data/NepalContour.RData")
 df_elev <- df_elev_MSP
 elev <- df_elev$elev
 df_contour <- df_contour_MSP

@@ -2,7 +2,7 @@
 # Extract and save the Nepal elevation data and contours used by the applications.
 #
 # This optional script generated the elevation and contour data supplied in
-# `Examples/Data/Nepal_contour.RData`. Run it from the repository root with:
+# `Examples/Data/NepalContour.RData`. Run it from the repository root with:
 #
 # Rscript Examples/contour_extract.R
 #
@@ -16,7 +16,7 @@
 # on platform-specific C++ build tools. Its installation may therefore fail in
 # confined environments or because of compiler/SDK configuration problems.
 # The contours have therefore been generated in advance and saved in
-# `Examples/Data/Nepal_contour.RData`, so `run_all.R` does not need to install
+# `Examples/Data/NepalContour.RData`, so `run_all.R` does not need to install
 # or load `contoureR`. These data are used only for presenting the application
 # results and figures; they are not part of the core method reproduction or
 # model fitting. Users requiring contours for new data can follow this script
@@ -59,5 +59,5 @@ save(
   df_elev_MSP,
   df_contour_GP_ST,
   df_contour_MSP,
-  file = "Examples/Data/Nepal_contour.RData"
+  file = "Examples/Data/NepalContour.RData"
 )

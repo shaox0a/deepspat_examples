@@ -438,7 +438,7 @@ if (fit_d3) {
   # 1) Warped elevation contours
   # -----------------------------
   # Load the contours extracted separately by `Examples/contour_extract.R`.
-  load("Examples/Data/Nepal_contour.RData")
+  load("Examples/Data/NepalContour.RData")
   df_contour0 <- df_contour_GP_ST
   
   newdata_contour <- data.frame(
