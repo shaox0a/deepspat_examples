@@ -18,6 +18,10 @@ if (!("deepspat" %in% rownames(installed.packages()))) {
 }
 
 envname <- file.path(examples_path, "deepspat_venv")
+# Remark: On macOS, Python installation may fail because of the local Homebrew
+# OpenSSL configuration. Run `brew update` and `brew upgrade openssl@3` (or
+# `brew install openssl@3` if needed). This is a local system configuration
+# issue, not part of the package implementation, so it is not handled here.
 if (!dir.exists(envname)) source(file.path(examples_path, "reproduce_prepare.R"))
 
 ####### Use the Python environment created by reproduce_prepare.R #########

@@ -113,6 +113,15 @@ reticulate::virtualenv_create(
 
 The setup reuses an existing Python 3.12 installation when available and only installs Python when none is found. Avoid forcing `install_python()`, as this may overwrite an existing reticulate-managed Python installation.
 
+**Remark:** On macOS, building Python may fail because the required Homebrew OpenSSL formula is unavailable or outdated. Update Homebrew and OpenSSL, then rerun the setup:
+
+```bash
+brew update
+brew upgrade openssl@3
+```
+
+If `openssl@3` is not installed, run `brew install openssl@3` instead. This is a local system configuration issue, not part of the package implementation, so it is not handled by the reproduction scripts.
+
 ### Step 2. Install TensorFlow-related Python packages
 
 After creating the virtual environment, run:
