@@ -73,6 +73,8 @@ The examples have been tested using:
 - **TensorFlow Probability 0.25.0**
 - **R ≥ 4.2**
 
+For Intel Macs (macOS x86-64), we recommend TensorFlow 2.16.2, tf-keras 2.16.0, and TensorFlow Probability 0.24.0.
+
 Required R packages include:
 
 - `deepspat`
