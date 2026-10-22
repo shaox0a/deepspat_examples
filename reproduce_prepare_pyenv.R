@@ -4,7 +4,6 @@
 # If prompted to install packages from source, select "no" to use binary packages.
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-install.packages(c("reticulate", "this.path"))
 library(reticulate)
 
 project_path <- this.path::this.dir()
