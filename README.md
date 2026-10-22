@@ -48,11 +48,12 @@ The folder `Examples/Data/` contains the data supplied with the repository:
 
 ## 2. Installation
 
-To help users prepare a reproducible runtime environment, we provide the script:
+To help users prepare a reproducible runtime environment, we provide two scripts:
 
-- `reproduce_prepare.R`
+- `reproduce_prepare_packages.R`: installs missing R packages and updates `deepspat` when needed
+- `reproduce_prepare_pyenv.R`: creates and configures the project-local Python environment
 
-`run_all.R` checks the required R and Python dependencies and sources this script automatically when setup is required. To prepare the environment and run all examples, run the following command from the repository root:
+`run_all.R` sources the R-package preparation script, which installs only missing packages, and sources the Python preparation script only when `deepspat_venv` does not exist. To prepare the environment and run all examples, run the following command from the repository root:
 
 ```bash
 Rscript run_all.R
@@ -91,10 +92,20 @@ Required R packages include:
 - `ggpubr`
 - `this.path`
 
-### Step 1. Set up the Python environment
+### Step 1. Install the required R packages
+
+From the repository root, run:
 
 ```r
-install.packages("reticulate")
+source("reproduce_prepare_packages.R")
+```
+
+This installs the latest CRAN source version of `deepspat` if it is missing or outdated and installs only the other required R packages that are missing.
+
+### Step 2. Set up the Python environment
+
+```r
+if (!requireNamespace("reticulate", quietly = TRUE)) install.packages("reticulate")
 library(reticulate)
 
 py_version <- "3.12:latest"
@@ -113,7 +124,7 @@ reticulate::virtualenv_create(
 
 The setup reuses an existing Python 3.12 installation when available and only installs Python when none is found. Avoid forcing `install_python()`, as this may overwrite an existing reticulate-managed Python installation.
 
-**Remark:** On macOS, building Python may fail because the required Homebrew OpenSSL formula is unavailable or outdated. Update Homebrew and OpenSSL, then rerun the setup:
+**Remark:** On macOS, building Python may fail because the required Homebrew OpenSSL formula is unavailable or outdated. If Homebrew is installed, update Homebrew and OpenSSL, then rerun the setup:
 
 ```bash
 brew update
@@ -122,7 +133,7 @@ brew upgrade openssl@3
 
 If `openssl@3` is not installed, run `brew install openssl@3` instead. This is a local system configuration issue, not part of the package implementation, so it is not handled by the reproduction scripts.
 
-### Step 2. Install TensorFlow-related Python packages
+### Step 3. Install TensorFlow-related Python packages
 
 After creating the virtual environment, run:
 
@@ -139,41 +150,6 @@ reticulate::virtualenv_install(
     "scipy"
   )
 )
-```
-
-### Step 3. Install the required R packages
-
-```r
-# Install from source because CRAN binaries for older R versions may be outdated.
-install.packages("deepspat", type = "source")
-stopifnot(packageVersion("deepspat") >= package_version("0.3.5"))
-
-install.packages(c(
-  "reticulate",
-  "tensorflow",
-  "keras",
-  "tfprobability",
-  "dplyr",
-  "ggplot2",
-  "ggnewscale",
-  "RColorBrewer",
-  "patchwork",
-  "fields",
-  "gstat",
-  "GpGp",
-  "cocons",
-  "ggmap",
-  "verification",
-  "FNN",
-  "devtools",
-  "scales",
-  "sp",
-  "viridis",
-  "gridExtra",
-  "ggpubr",
-  "this.path"
-))
-
 ```
 
 ### Step 4. Check that the installation works

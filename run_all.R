@@ -10,24 +10,27 @@ if (!requireNamespace("this.path", quietly = TRUE)) install.packages("this.path"
 examples_path <- this.path::this.dir()
 setwd(examples_path)
 
-if (!("deepspat" %in% rownames(installed.packages()))) {
-  install.packages("deepspat", type = "source")
-} else if (packageVersion("deepspat") < package_version("0.3.5")) {
-  message("The installed deepspat version is outdated; updating to version 0.3.5 or later.")
-  install.packages("deepspat", type = "source")
-}
 
+
+####### Prepare missing or outdated R packages #########
+source(file.path(examples_path, "reproduce_prepare_packages.R"))
+
+
+
+####### Prepare the project-local Python environment if it does not exist #########
 envname <- file.path(examples_path, "deepspat_venv")
 # Remark: On macOS, Python installation may fail because of the local Homebrew
 # OpenSSL configuration. Run `brew update` and `brew upgrade openssl@3` (or
 # `brew install openssl@3` if needed). This is a local system configuration
 # issue, not part of the package implementation, so it is not handled here.
-if (!dir.exists(envname)) source(file.path(examples_path, "reproduce_prepare.R"))
+if (!dir.exists(envname)) source(file.path(examples_path, "reproduce_prepare_pyenv.R"))
 
-####### Use the Python environment created by reproduce_prepare.R #########
+####### Use the Python environment created by reproduce_prepare_pyenv.R #########
 library(reticulate)
 reticulate::use_virtualenv(file.path(examples_path, "deepspat_venv"), required = TRUE)
 reticulate::py_config()
+
+
 
 ####### Check availability of required packages #########
 source("Examples/check_packages.R")
