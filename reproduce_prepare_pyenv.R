@@ -22,14 +22,35 @@ reticulate::virtualenv_create(
 
 reticulate::use_virtualenv(envname, required = TRUE)
 
-reticulate::virtualenv_install(
-  envname = envname,
-  packages = c(
-    "tensorflow==2.18.0",
-    "tensorflow-probability==0.25.0",
-    "tf-keras==2.18.0",
+# TensorFlow 2.16 is the last release supporting macOS x86-64.
+is_macos_intel <- Sys.info()[["sysname"]] == "Darwin" &&
+  Sys.info()[["machine"]] == "x86_64"
+
+# if (is_macos_intel) {
+#   python_packages <- c(
+#     "tensorflow==2.16.2",
+#     "tensorflow-probability==0.24.0",
+#     "tf-keras==2.16.0",
+#     "scipy"
+#   )
+# } else {
+#   python_packages <- c(
+#     "tensorflow==2.18.0",
+#     "tensorflow-probability==0.25.0",
+#     "tf-keras==2.18.0",
+#     "scipy"
+#   )
+# }
+python_packages <- c(
+    "tensorflow==2.16.2",
+    "tensorflow-probability==0.24.0",
+    "tf-keras==2.16.0",
     "scipy"
   )
+
+reticulate::virtualenv_install(
+  envname = envname,
+  packages = python_packages
 )
 
 # The Python path shown below should point to `deepspat_venv`.
