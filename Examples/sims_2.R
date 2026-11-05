@@ -65,10 +65,21 @@ coco_object <- coco ( type = "dense",
                       data = holes_train)
 
 # Set optimization bounds explicitly for reproducibility across cocons versions.
-coco_object <- cocoOptim(
-  coco_object,
-  boundaries = getBoundaries(coco_object, -2, 2),
-  ncores = "auto"
+# Try parallel fitting first and retry with one core if it fails.
+coco_object <- tryCatch(
+  cocoOptim(
+    coco_object,
+    boundaries = getBoundaries(coco_object, -2, 2),
+    ncores = 15
+  ),
+  error = function(e) {
+    message("Parallel cocons fitting failed; retrying with one core.")
+    cocoOptim(
+      coco_object,
+      boundaries = getBoundaries(coco_object, -2, 2),
+      ncores = 1
+    )
+  }
 )
 
 pred_cocons <- cocoPredict (coco_object,
