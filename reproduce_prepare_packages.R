@@ -39,6 +39,12 @@ if (!requireNamespace("deepspat", quietly = TRUE) ||
   install.packages("deepspat", type = "source")
 }
 
+# Update `ggplot2` if needed because `patchwork` requires `is_ggplot()`.
+if (!requireNamespace("ggplot2", quietly = TRUE) ||
+    packageVersion("ggplot2") < package_version("3.5.2")) {
+  install.packages("ggplot2")
+}
+
 # Install only the required R packages that are currently missing.
 required_packages <- c(deepspat_packages, example_packages)
 missing_packages <- setdiff(required_packages, rownames(installed.packages()))
